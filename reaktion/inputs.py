@@ -120,9 +120,11 @@ class GraphInputModel(BaseModel):
     globals: list[GlobalArgInputModel]
 
 
-@pydantic.input(GraphInputModel, all_fields=True)
+@pydantic.input(GraphInputModel)
 class GraphInput:
-    pass
+    nodes: list[GraphNodeInput]
+    edges: list[GraphEdgeInput]
+    globals: list[GlobalArgInput]
 
 
 class ReactiveTemplateInputModel(BaseModel):

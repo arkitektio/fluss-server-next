@@ -140,6 +140,7 @@ class PortModel(BaseModel):
     return_widget: ReturnWidgetModelUnion | None
     child: Optional[ChildPortModel] = None
     groups: list[str] | None
+    validators: list[str] | None
 
 
 class DefinitionModel(BaseModel):

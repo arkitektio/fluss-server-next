@@ -144,6 +144,7 @@ class Port:
     assign_widget: AssignWidget | None
     return_widget: ReturnWidget | None
     groups: list[str] | None
+    validators: list[scalars.Validator] | None
 
 
 @pydantic.type(models.DefinitionModel)

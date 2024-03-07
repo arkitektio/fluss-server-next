@@ -14,7 +14,7 @@ class Workspace(models.Model):
     """Graph is a Template for a Template"""
 
     restrict = models.JSONField(
-        default=list, help_text="Restrict access to specific nodes for this diagram"
+        default=list, help_text="Restrict access to specific nodes for this diagram okay?"
     )
     title = models.CharField(max_length=10000, null=True)
     description = models.CharField(max_length=10000, null=True)

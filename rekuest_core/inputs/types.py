@@ -157,7 +157,7 @@ class PortInput:
 
 
     """
-
+    validators: list[scalars.Validator] | None = strawberry.field(default_factory=list)
     key: str
     scope: enums.PortScope
     label: str | None = None
@@ -180,6 +180,12 @@ class PortInput:
 class PortGroupInput:
     key: str
     hidden: bool
+
+@pydantic.input(models.BindsInputModel)
+class BindsInput:
+    templates: Optional[list[str]]
+    clients: Optional[list[str]]
+    desired_instances: int = 1
 
 
 @strawberry.input()

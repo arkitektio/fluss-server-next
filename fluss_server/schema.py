@@ -2,95 +2,65 @@ import strawberry
 from strawberry_django.optimizer import DjangoOptimizerExtension
 from kante.directives import upper, replace, relation
 from reaktion import types
-from reaktion import mutations
-from reaktion import subscriptions
-from reaktion import queries
-from reaktion import messages
+from reaktion.graphql import mutations
+from reaktion.graphql import subscriptions
+from reaktion.graphql import queries
 import strawberry_django
 from koherent.strawberry.extension import KoherentExtension
 from typing import List
 from rekuest_core.constants import interface_types
-
+from authentikate.strawberry.permissions import IsAuthenticated
 
 @strawberry.type
 class Query:
     """The root query type"""
 
-    github_repo: types.GithubRepo = strawberry_django.field(
-        resolver=queries.github_repo, description="Return all dask clusters"
+    
+    flow = strawberry_django.field(resolver=queries.flow)
+    flows: list[types.Flow] = strawberry_django.field()
+    workspaces: list[types.Workspace] = strawberry_django.field()
+    workspace = strawberry_django.field(resolver=queries.workspace)
+    reactive_templates: list[
+        types.ReactiveTemplate
+    ] = strawberry_django.field()
+    reactive_template = strawberry_django.field(
+        resolver=queries.reactive_template
     )
-    definition: types.Definition = strawberry_django.field(
-        resolver=queries.definition, description="Return all dask clusters"
-    )
-    release: types.Release = strawberry_django.field(
-        resolver=queries.release, description="Return all dask clusters"
-    )
-    flavour: types.Flavour = strawberry_django.field(
-        resolver=queries.flavour, description="Return all dask clusters"
-    )
-    me: types.User = strawberry_django.field(
-        resolver=queries.me, description="Return the currently logged in user"
-    )
-    best_flavour: types.Flavour = strawberry_django.field(
-        resolver=queries.best_flavour,
-        description="Return the currently logged in user",
-    )
-    flavours: List[types.Flavour] = strawberry_django.field()
-    releases: List[types.Release] = strawberry_django.field()
-    github_repos: List[types.GithubRepo] = strawberry_django.field()
-    definitions: List[types.Definition] = strawberry_django.field()
-    pods: List[types.Pod] = strawberry_django.field()
 
 
 @strawberry.type
 class Mutation:
     """The root mutation type"""
 
-    scan_repo: types.GithubRepo = strawberry_django.mutation(
-        resolver=mutations.scan_repo,
-        description="Create a new dask cluster on a bridge server",
+    
+    update_workspace = strawberry_django.mutation(
+        resolver=mutations.update_workspace
     )
-    create_github_repo: types.GithubRepo = strawberry_django.mutation(
-        resolver=mutations.create_github_repo,
-        description="Create a new Github repository on a bridge server",
+    create_workspace = strawberry_django.mutation(
+        permission_classes=[IsAuthenticated],
+        resolver=mutations.create_workspace,
     )
-    create_deployment: types.Deployment = strawberry_django.mutation(
-        resolver=mutations.create_deployment,
-        description="Create a new dask cluster on a bridge server",
-    )
-    update_deployment: types.Deployment = strawberry_django.mutation(
-        resolver=mutations.update_deployment,
-        description="Create a new dask cluster on a bridge server",
-    )
-    create_pod: types.Pod = strawberry_django.mutation(
-        resolver=mutations.create_pod,
-        description="Create a new dask cluster on a bridge server",
-    )
-    update_pod: types.Pod = strawberry_django.mutation(
-        resolver=mutations.update_pod,
-        description="Create a new dask cluster on a bridge server",
-    )
+
 
 
 @strawberry.type
 class Subscription:
     """The root subscription type"""
-
-    pod: messages.PodUpdateMessage = strawberry.subscription(
-        resolver=subscriptions.pod,
-        description="Create a new dask cluster on a bridge server",
-    )
-    pods: messages.PodUpdateMessage = strawberry.subscription(
-        resolver=subscriptions.pods,
-        description="Create a new dask cluster on a bridge server",
-    )
+    pass
 
 
 schema = strawberry.Schema(
     query=Query,
     mutation=Mutation,
-    subscription=Subscription,
     directives=[upper, replace, relation],
     extensions=[DjangoOptimizerExtension, KoherentExtension],
-    types=[types.Selector, types.CudaSelector, types.CPUSelector] + interface_types,
+    types=[
+        types.ArkitektGraphNode,
+        types.ArkitektFilterGraphNode,
+        types.RetriableNode,
+        types.ArgNode,
+        types.ReturnNode,
+        types.VanillaEdge,
+        types.LoggingEdge,
+        types.ReactiveNode,] + interface_types,
 )

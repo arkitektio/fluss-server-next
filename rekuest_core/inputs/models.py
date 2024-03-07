@@ -65,6 +65,7 @@ class ChildPortInputModel(BaseModel):
 
 
 class PortInputModel(BaseModel):
+    validators: list[str] | None
     key: str
     scope: enums.PortScope
     label: str | None = None
