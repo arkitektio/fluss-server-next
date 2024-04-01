@@ -81,7 +81,7 @@ class EffectDependency:
 
 @pydantic.interface(models.EffectModel)
 class Effect:
-    kind: str
+    kind: enums.EffectKind
     dependencies: list[EffectDependency]
     pass
 
@@ -128,6 +128,13 @@ class PortGroup:
     hidden: bool
 
 
+@pydantic.type(models.ValidatorModel)
+class Validator:
+    function: scalars.ValidatorFunction
+    dependencies: list[str] | None
+    label: str | None
+
+
 @pydantic.type(models.PortModel)
 class Port:
     identifier: scalars.Identifier | None
@@ -144,7 +151,7 @@ class Port:
     assign_widget: AssignWidget | None
     return_widget: ReturnWidget | None
     groups: list[str] | None
-    validators: list[scalars.Validator] | None
+    validators: list[Validator] | None
 
 
 @pydantic.type(models.DefinitionModel)
