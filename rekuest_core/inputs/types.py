@@ -36,7 +36,7 @@ class EffectInput:
 
 
     """
-
+    kind: enums.EffectKind
     dependencies: list[EffectDependencyInput]
     label: str
     description: str | None
@@ -137,6 +137,16 @@ class ChildPortInput:
     return_widget: Optional["ReturnWidgetInput"] = None
 
 
+
+
+
+@pydantic.input(models.ValidatorInputModel)
+class ValidatorInput:
+    function: scalars.ValidatorFunction
+    dependencies: list[str] | None = strawberry.field(default_factory=list)
+    label: str | None = None
+
+
 @pydantic.input(models.PortInputModel)
 class PortInput:
     """Port
@@ -157,7 +167,7 @@ class PortInput:
 
 
     """
-    validators: list[scalars.Validator] | None = strawberry.field(default_factory=list)
+    validators: list[ValidatorInput] | None = strawberry.field(default_factory=list)
     key: str
     scope: enums.PortScope
     label: str | None = None

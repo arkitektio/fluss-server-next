@@ -26,6 +26,11 @@ class ChoiceInputModel(BaseModel):
     description: str | None
 
 
+class ValidatorInputModel(BaseModel):
+    function: str
+    dependencies: list[str] | None = []
+    label: str | None = None
+
 class AssignWidgetInputModel(BaseModel):
     kind: enums.AssignWidgetKind
     query: str | None = None
@@ -65,7 +70,7 @@ class ChildPortInputModel(BaseModel):
 
 
 class PortInputModel(BaseModel):
-    validators: list[str] | None
+    validators: list[ValidatorInputModel] | None
     key: str
     scope: enums.PortScope
     label: str | None = None

@@ -159,3 +159,10 @@ class GraphEdgeKind(str, Enum):
 
     VANILLA = "VANILLA"
     LOGGING = "LOGGING"
+
+
+@strawberry.enum
+class DemandKind(str, Enum):
+    """Scope of the Posrt"""
+    ARGS = "args"
+    RETURNS = "returns"

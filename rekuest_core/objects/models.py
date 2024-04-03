@@ -125,6 +125,12 @@ class PortGroup:
     hidden: bool
 
 
+class ValidatorModel(BaseModel):
+    function: str
+    dependencies: list[str] | None = []
+    label: str | None = None
+
+
 class PortModel(BaseModel):
     key: str
     scope: str
@@ -140,7 +146,7 @@ class PortModel(BaseModel):
     return_widget: ReturnWidgetModelUnion | None
     child: Optional[ChildPortModel] = None
     groups: list[str] | None
-    validators: list[str] | None
+    validators: list[ValidatorModel] | None
 
 
 class DefinitionModel(BaseModel):

@@ -5,8 +5,9 @@ from rekuest_core.inputs import models as rimodels
 from rekuest_core.inputs import types as ritypes
 from rekuest_core import enums as renums
 from reaktion import scalars, enums
-from typing import Any, Dict
-
+from typing import Any, Dict, Optional
+from strawberry import LazyType
+import strawberry
 
 class PositionInputModel(BaseModel):
     x: float
@@ -142,3 +143,23 @@ class ReactiveTemplateInputModel(BaseModel):
 @pydantic.input(ReactiveTemplateInputModel, all_fields=True)
 class ReactiveTemplateInput:
     pass
+
+
+@strawberry.input
+class PortMatchInput:
+    at: int | None = None
+    key: str | None  = None
+    kind: renums.PortKind | None  = None
+    identifier: str | None  = None
+    nullable: bool | None  = None
+    variants: Optional[list[LazyType["PortDemandInput", __name__]]]  = None
+    child: Optional[LazyType["PortDemandInput", __name__]]  = None
+ 
+
+
+@strawberry.input
+class PortDemandInput:
+    kind: enums.DemandKind
+    matches: list[PortMatchInput] | None = None
+    force_length: int | None = None
+    force_non_nullable_length: int | None = None
