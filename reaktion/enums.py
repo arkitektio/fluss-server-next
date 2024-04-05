@@ -109,6 +109,7 @@ class ReactiveImplementation(str, Enum):
     SPLIT = "SPLIT"
     OMIT = "OMIT"
     ENSURE = "ENSURE"
+    SELECT = "SELECT"
 
     # Basic Operations
     ADD = "ADD"
@@ -117,6 +118,11 @@ class ReactiveImplementation(str, Enum):
     DIVIDE = "DIVIDE"
     MODULO = "MODULO"
     POWER = "POWER"
+
+    # JUST
+    JUST = "JUST"
+
+    
 
     # String Operations
     PREFIX = "PREFIX"
