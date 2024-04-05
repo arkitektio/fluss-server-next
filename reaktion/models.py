@@ -25,7 +25,7 @@ class Workspace(models.Model):
         get_user_model(),
         related_name="pinned_workspaces",
         blank=True,
-        help_text="The users that have pinned the position",
+        help_text="The users that have pinned the workspace",
     )
 
     def __str__(self):
