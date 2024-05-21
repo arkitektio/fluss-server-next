@@ -81,12 +81,11 @@ class RunEventKind(str, Enum):
 @strawberry.enum
 class GraphNodeKind(str, Enum):
     """Event Type for the Event Operator"""
-
-    ARKITEKT = "ARKITEKT"
     REACTIVE = "REACTIVE"
     ARGS = "ARGS"
     RETURNS = "RETURNS"
-    ARKITEKT_FILTER = "ARKITEKT_FILTER"
+    REKUEST = "REKUEST_MAP"
+    REKUEST_FILTER = "REKUEST_FILTER"
 
 
 @strawberry.enum

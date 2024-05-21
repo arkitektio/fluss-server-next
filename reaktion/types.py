@@ -74,40 +74,43 @@ class AssignableNode:
     next_timeout: int | None
 
 
-class ArkitektGraphNodeModel(GraphNodeModel, RetriableNodeModel, AssignableNodeModel):
-    kind: Literal["ARKITEKT"]
+
+class RekuestNodeModel(BaseModel):
     hash: str
     map_strategy: str
     allow_local_execution: bool
     binds: rmodels.BindsModel
-    node_kind: renums.NodeKind
+    node_kind: str
 
-class ArkitektFilterGraphNodeModel(GraphNodeModel, RetriableNodeModel, AssignableNodeModel):
-    kind: Literal["ARKITEKT_FILTER"]
+@pydantic.interface(RekuestNodeModel)
+class RekuestNode:
     hash: str
     map_strategy: str
-    allow_local_execution: bool
-    binds: rmodels.BindsModel
-    node_kind: renums.NodeKind
-
-
-
-@pydantic.type(ArkitektGraphNodeModel)
-class ArkitektGraphNode(GraphNode, RetriableNode, AssignableNode):
-    hash: str
-    map_strategy: enums.MapStrategy
     allow_local_execution: bool
     binds: rtypes.Binds
     node_kind: renums.NodeKind
 
 
-@pydantic.type(ArkitektFilterGraphNodeModel)
-class ArkitektFilterGraphNode(GraphNode, RetriableNode, AssignableNode):
-    hash: str
-    map_strategy: enums.MapStrategy
-    allow_local_execution: bool
-    binds: rtypes.Binds
-    node_kind: renums.NodeKind
+
+class RekuestMapNodeModel(GraphNodeModel, RetriableNodeModel, AssignableNodeModel, RekuestNodeModel):
+    kind: Literal["REKUEST_MAP"]
+    hello: str | None = None # This is a fake attribute to test the model
+    
+
+class RekuestFilterNodeModel(GraphNodeModel, RetriableNodeModel, AssignableNodeModel, RekuestNodeModel):
+    kind: Literal["REKUEST_FILTER"]
+    path: str | None = None #This is a fake attribute to test the model
+
+
+
+@pydantic.type(RekuestMapNodeModel)
+class RekuestMapNode(GraphNode, RetriableNode, AssignableNode, RekuestNode):
+    hello: str | None = None
+
+
+@pydantic.type(RekuestFilterNodeModel)
+class RekuestFilterNode(GraphNode, RetriableNode, AssignableNode, RekuestNode):
+    path: str | None = None
 
 
 class ArgNodeModel(GraphNodeModel):
@@ -145,7 +148,7 @@ class ReturnNode(GraphNode):
 
 
 GraphNodeModelUnion = Union[
-    ArkitektGraphNodeModel, ReactiveNodeModel, ArgNodeModel, ReturnNodeModel, ArkitektFilterGraphNodeModel
+    RekuestMapNodeModel, ReactiveNodeModel, ArgNodeModel, ReturnNodeModel, RekuestFilterNodeModel
 ]
 
 
@@ -237,6 +240,7 @@ class Flow:
     description: str | None = None
     created_at: datetime.datetime
     workspace: "Workspace"
+    hash: str
 
     @strawberry_django.field()
     def graph(self, info) -> Graph:
@@ -284,9 +288,13 @@ class ReactiveTemplate:
         return []
 
 
-@strawberry_django.type(models.Run, pagination=True)
+@strawberry_django.type(models.Run, filters=filters.RunFilter, pagination=True)
 class Run:
     id: strawberry.ID
+    created_at: datetime.datetime
+    events: list["RunEvent"]
+    flow: "Flow"
+    assignation: strawberry.ID
 
 
 @strawberry_django.type(models.RunSnapshot, pagination=True)
@@ -297,6 +305,12 @@ class RunSnapshot:
 @strawberry_django.type(models.RunEvent, pagination=True)
 class RunEvent:
     id: strawberry.ID
+    edge: strawberry.ID
+    t: int
+    caused_by: list[strawberry.ID]
+    value: scalars.EventValue
+    kind: enums.RunEventKind
+    created_at: datetime.datetime
 
 
 @strawberry_django.type(models.Trace, pagination=True)

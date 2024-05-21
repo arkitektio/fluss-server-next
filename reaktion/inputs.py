@@ -1,6 +1,6 @@
 
 from strawberry.experimental import pydantic
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from rekuest_core.inputs import models as rimodels
 from rekuest_core.inputs import types as ritypes
 from rekuest_core import enums as renums
@@ -68,6 +68,9 @@ class GraphNodeInput:
     binds: ritypes.BindsInput | None = None
     parent_node: str | None = None
     implementation: enums.ReactiveImplementation | None = None
+    # Placeholder for the node kind
+    hello: str | None = None
+    path: str | None = None
 
 
 class StreamItemInputModel(BaseModel):
@@ -163,3 +166,66 @@ class PortDemandInput:
     matches: list[PortMatchInput] | None = None
     force_length: int | None = None
     force_non_nullable_length: int | None = None
+
+
+
+
+class CreateRunInputModel(BaseModel):
+    flow: str
+    snapshot_interval: int
+    assignation: str 
+
+
+@pydantic.input(CreateRunInputModel)
+class CreateRunInput:
+    assignation: strawberry.ID
+    flow: strawberry.ID
+    snapshot_interval: int
+
+
+class DeteteRunInputModel(BaseModel):
+    run: str
+
+@pydantic.input(DeteteRunInputModel)
+class DeleteRunInput:
+    run: strawberry.ID
+
+
+class SnapshotRunInputModel(BaseModel):
+    run: str
+    events: list[str]
+    t : int
+
+
+@pydantic.input(SnapshotRunInputModel)
+class SnapshotRunInput:
+    run: strawberry.ID
+    events: list[strawberry.ID]
+    t : int
+
+
+class DeleteSnapshotInputModel(BaseModel):
+    snapshot: str
+
+@pydantic.input(DeleteSnapshotInputModel)
+class DeleteSnapshotInput:
+    snapshot: strawberry.ID
+
+
+class TrackInputModel(BaseModel):
+    edge: str
+    t: int 
+    kind: str
+    value: Any | None = None
+    run: str
+    caused_by: list[str] = Field(default_factory=list)
+
+
+@pydantic.input(TrackInputModel)
+class TrackInput:
+    edge: strawberry.ID
+    t: int 
+    kind: enums.RunEventKind
+    value: scalars.EventValue | None = None
+    run: strawberry.ID
+    caused_by: list[strawberry.ID] 

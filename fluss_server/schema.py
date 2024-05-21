@@ -1,7 +1,7 @@
 import strawberry
 from strawberry_django.optimizer import DjangoOptimizerExtension
 from kante.directives import upper, replace, relation
-from reaktion import types
+from reaktion import types, models
 from reaktion.graphql import mutations
 from reaktion.graphql import subscriptions
 from reaktion.graphql import queries
@@ -16,8 +16,8 @@ class Query:
     """The root query type"""
 
     
-    flow = strawberry_django.field(resolver=queries.flow)
     flows: list[types.Flow] = strawberry_django.field()
+    runs: list[types.Run] = strawberry_django.field()
     workspaces: list[types.Workspace] = strawberry_django.field()
     workspace = strawberry_django.field(resolver=queries.workspace)
     reactive_templates: list[
@@ -26,6 +26,17 @@ class Query:
     reactive_template = strawberry_django.field(
         resolver=queries.reactive_template
     )
+
+    @strawberry_django.field
+    def run(self, id: strawberry.ID) -> types.Run:
+        return models.Run.objects.get(id=id)
+    
+    @strawberry_django.field
+    def flow(self, id: strawberry.ID) -> types.Flow:
+        print("self")
+        return models.Flow.objects.get(id=id)
+    
+
 
 
 @strawberry.type
@@ -39,6 +50,21 @@ class Mutation:
     create_workspace = strawberry_django.mutation(
         permission_classes=[IsAuthenticated],
         resolver=mutations.create_workspace,
+    )
+    create_run = strawberry_django.mutation(
+        resolver=mutations.create_run
+    )
+    delete_run = strawberry_django.mutation(
+        resolver=mutations.delete_run
+    )
+    snapshot = strawberry_django.mutation(
+        resolver=mutations.snapshot
+    )
+    delete_snapshot = strawberry_django.mutation(
+        resolver=mutations.delete_snapshot
+    )
+    track = strawberry_django.mutation(
+        resolver=mutations.track
     )
 
 
@@ -55,8 +81,8 @@ schema = strawberry.Schema(
     directives=[upper, replace, relation],
     extensions=[DjangoOptimizerExtension, KoherentExtension],
     types=[
-        types.ArkitektGraphNode,
-        types.ArkitektFilterGraphNode,
+        types.RekuestFilterNode,
+        types.RekuestMapNode,
         types.RetriableNode,
         types.ArgNode,
         types.ReturnNode,

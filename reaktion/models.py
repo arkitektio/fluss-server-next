@@ -138,8 +138,7 @@ class RunEvent(models.Model):
     )
     t = models.IntegerField()
     caused_by = models.JSONField(default=list, blank=True)
-    source = models.CharField(max_length=1000)
-    handle = models.CharField(max_length=1000)
+    edge_id = models.CharField(max_length=1000, null=True, blank=True)
     created_at = models.DateTimeField(auto_created=True, auto_now_add=True)
     value = models.JSONField(null=True, blank=True)
 
