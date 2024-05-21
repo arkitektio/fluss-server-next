@@ -66,6 +66,7 @@ class ReactiveImplementationChoices(TextChoices):
     IF = "IF", "IF (If condition is met)"
     AND = "AND", "AND (AND condition)"
     ALL = "ALL", "ALL (establish if all values are Trueish)"
+    REORDER = "REORDER", "REORDER (Reorder the data)"
 
 
 @strawberry.enum
