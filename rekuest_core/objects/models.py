@@ -94,7 +94,7 @@ EffectModelUnion = Union[MessageEffectModel, CustomEffectModel]
 
 
 class ChildPortModel(BaseModel):
-    key: str | None
+    key: str 
     label: str | None
     scope: str
     kind: str
@@ -129,6 +129,7 @@ class ValidatorModel(BaseModel):
     function: str
     dependencies: list[str] | None = []
     label: str | None = None
+    error_message: str | None = None
 
 
 class PortModel(BaseModel):

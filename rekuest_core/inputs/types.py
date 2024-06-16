@@ -120,7 +120,7 @@ class ChildPortInput:
     is of kind integer.
 
     """
-    key: str | None
+    key: str 
     label: str | None
     kind: enums.PortKind
     scope: enums.PortScope
@@ -144,6 +144,7 @@ class ValidatorInput:
     function: scalars.ValidatorFunction
     dependencies: list[str] | None = strawberry.field(default_factory=list)
     label: str | None = None
+    error_message: str | None = None
 
 
 @pydantic.input(models.PortInputModel)

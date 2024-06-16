@@ -106,12 +106,13 @@ class Binds:
 
 @pydantic.type(models.ChildPortModel)
 class ChildPort:
-    key: str | None
+    key: str 
     label: strawberry.auto
     identifier: scalars.Identifier | None
     default: scalars.AnyDefault | None
     scope: enums.PortScope
     kind: enums.PortKind
+    description: str | None
     nullable: bool
     children: Optional[list[
         LazyType["ChildPort", __name__]
@@ -131,6 +132,7 @@ class Validator:
     function: scalars.ValidatorFunction
     dependencies: list[str] | None
     label: str | None
+    error_message: str | None = None
 
 
 @pydantic.type(models.PortModel)

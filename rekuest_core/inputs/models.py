@@ -32,6 +32,7 @@ class ValidatorInputModel(BaseModel):
     function: str
     dependencies: list[str] | None = []
     label: str | None = None
+    error_message: str | None = None
 
 class AssignWidgetInputModel(BaseModel):
     kind: enums.AssignWidgetKind
@@ -58,7 +59,7 @@ class ReturnWidgetInputModel(BaseModel):
 
 
 class ChildPortInputModel(BaseModel):
-    key: str | None = None # None is the default value when its the only value (e.g as the child of a list)
+    key: str 
     label: str | None
     kind: enums.PortKind
     scope: enums.PortScope
