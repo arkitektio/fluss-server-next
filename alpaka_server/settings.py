@@ -10,10 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
 import os
-from omegaconf import OmegaConf
+from pathlib import Path
 
+from omegaconf import OmegaConf
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -86,7 +86,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "fluss_server.urls"
+ROOT_URLCONF = "alpaka_server.urls"
 
 TEMPLATES = [
     {
@@ -109,8 +109,8 @@ AUTHENTICATION_BACKENDS = (
     "guardian.backends.ObjectPermissionBackend",
 )
 
-WSGI_APPLICATION = "fluss_server.wsgi.application"
-ASGI_APPLICATION = "fluss_server.asgi.application"
+WSGI_APPLICATION = "alpaka_server.wsgi.application"
+ASGI_APPLICATION = "alpaka_server.asgi.application"
 
 
 # Database

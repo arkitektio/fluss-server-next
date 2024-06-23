@@ -7,19 +7,17 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
 """
 
-
 import os
 
 import django
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fluss_server.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "alpaka_server.settings")
 django.setup()
 
-from channels.routing import ProtocolTypeRouter, URLRouter  # noqa
-from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack  # noqa
-from django.urls import re_path  # noqa
+from channels.routing import ProtocolTypeRouter, URLRouter  # noqa
 from django.core.asgi import get_asgi_application  # noqa
+from django.urls import re_path  # noqa
 from kante.consumers import KanteHTTPConsumer, KanteWsConsumer  # noqa
 from kante.cors import CorsMiddleware  # noqa
 
@@ -29,7 +27,6 @@ django_asgi_app = get_asgi_application()
 
 
 from .schema import schema  # noqa
-
 
 gql_http_consumer = CorsMiddleware(
     AuthMiddlewareStack(KanteHTTPConsumer.as_asgi(schema=schema))

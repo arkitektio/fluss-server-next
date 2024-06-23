@@ -8,6 +8,8 @@ __pycache__/
 # C extensions
 *.so
 
+ollama/*
+open-webui/*
 # Distribution / packaging
 .Python
 build/
