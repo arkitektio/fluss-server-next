@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 def create_run(info: Info, input: inputs.CreateRunInput) -> types.Run:
     run, created = models.Run.objects.update_or_create(
         flow_id=input.flow,
-        assignation_id=input.assignation,
+        assignation=input.assignation,
         defaults=dict(snapshot_interval=input.snapshot_interval),
     )
 
