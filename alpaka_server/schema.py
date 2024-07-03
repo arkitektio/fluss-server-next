@@ -32,6 +32,10 @@ class Query:
         return models.Run.objects.get(id=id)
     
     @strawberry_django.field
+    def run_for_assignation(self, id: strawberry.ID) -> types.Run:
+        return models.Run.objects.get(assignation=id)
+    
+    @strawberry_django.field
     def flow(self, id: strawberry.ID) -> types.Flow:
         print("self")
         return models.Flow.objects.get(id=id)
