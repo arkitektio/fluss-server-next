@@ -113,12 +113,13 @@ class Run(models.Model):
         blank=True,
         help_text="The users that have pinned the position",
     )
+    created_at = models.DateTimeField(auto_created=True, auto_now_add=True)
 
     def __str__(self) -> str:
         return f"{self.flow.workspace.name} - {self.assignation}"
 
 
-class RunSnapshot(models.Model):
+class Snapshot(models.Model):
     run = models.ForeignKey(
         Run, on_delete=models.CASCADE, null=True, blank=True, related_name="snapshots"
     )
@@ -128,10 +129,11 @@ class RunSnapshot(models.Model):
 
 
 class RunEvent(models.Model):
+    reference = models.CharField(max_length=1000, null=True, blank=True)
     run = models.ForeignKey(
         Run, on_delete=models.CASCADE, null=True, blank=True, related_name="events"
     )
-    snapshot = models.ManyToManyField(RunSnapshot, related_name="events")
+    snapshot = models.ManyToManyField(Snapshot, related_name="events")
     kind = TextChoicesField(
         max_length=1000,
         choices_enum=enums.RunEventKindChoices,
@@ -140,7 +142,8 @@ class RunEvent(models.Model):
     )
     t = models.IntegerField()
     caused_by = models.JSONField(default=list, blank=True)
-    edge_id = models.CharField(max_length=1000, null=True, blank=True)
+    source = models.CharField(max_length=1000)
+    handle = models.CharField(max_length=1000, blank=True)
     created_at = models.DateTimeField(auto_created=True, auto_now_add=True)
     value = models.JSONField(null=True, blank=True)
 

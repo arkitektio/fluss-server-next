@@ -295,21 +295,32 @@ class Run:
     events: list["RunEvent"]
     flow: "Flow"
     assignation: strawberry.ID
+    snapshots: list["Snapshot"]
+
+    @strawberry_django.field()
+    def latest_snapshot(self, info) -> Optional["Snapshot"]:
+        return self.snapshots.order_by("-created_at").first()
 
 
-@strawberry_django.type(models.RunSnapshot, pagination=True)
-class RunSnapshot:
+@strawberry_django.type(models.Snapshot, pagination=True)
+class Snapshot:
+    t: int
+    run: "Run"
+    events: list["RunEvent"]
     id: strawberry.ID
+    status: str | None = None
+    created_at: datetime.datetime
 
 
 @strawberry_django.type(models.RunEvent, pagination=True)
 class RunEvent:
     id: strawberry.ID
-    edge: strawberry.ID
     t: int
     caused_by: list[strawberry.ID]
     value: scalars.EventValue
     kind: enums.RunEventKind
+    handle: str      
+    source: str
     created_at: datetime.datetime
 
 

@@ -22,8 +22,8 @@ def delete_run(info: Info, input: inputs.DeleteRunInput) -> strawberry.ID:
     run.delete()
     return input.run
 
-def snapshot(info: Info, input: inputs.SnapshotRunInput) -> types.RunSnapshot:
-    snapshot = models.RunSnapshot.objects.create(
+def snapshot(info: Info, input: inputs.SnapshotRunInput) -> types.Snapshot:
+    snapshot = models.Snapshot.objects.create(
         run_id=input.run,
         t=input.t
     )
@@ -31,18 +31,21 @@ def snapshot(info: Info, input: inputs.SnapshotRunInput) -> types.RunSnapshot:
 
 
 def delete_snapshot(info: Info, input: inputs.DeleteSnapshotInput) -> strawberry.ID:
-    snapshot = models.RunSnapshot.objects.get(id=input.snapshot)
+    snapshot = models.Snapshot.objects.get(id=input.snapshot)
     snapshot.delete()
     return input.snapshot
 
 
 def track(info: Info, input: inputs.TrackInput) -> types.RunEvent:
     event = models.RunEvent.objects.create(
+        reference=input.reference,
         run_id=input.run,
         t=input.t,
-        type=input.type,
+        kind=input.kind,
         value=input.value,
         caused_by=input.caused_by,
-        edge_id=input.edge
+        source=input.source,
+        handle=input.handle
+
     )
     return event

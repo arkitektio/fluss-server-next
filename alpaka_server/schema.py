@@ -18,6 +18,7 @@ class Query:
     
     flows: list[types.Flow] = strawberry_django.field()
     runs: list[types.Run] = strawberry_django.field()
+    snapshots: list[types.Snapshot] = strawberry_django.field()
     workspaces: list[types.Workspace] = strawberry_django.field()
     workspace = strawberry_django.field(resolver=queries.workspace)
     reactive_templates: list[
@@ -25,6 +26,9 @@ class Query:
     ] = strawberry_django.field()
     reactive_template = strawberry_django.field(
         resolver=queries.reactive_template
+    )
+    events_between = strawberry_django.field(
+        resolver=queries.events_between
     )
 
     @strawberry_django.field
@@ -39,6 +43,11 @@ class Query:
     def flow(self, id: strawberry.ID) -> types.Flow:
         print("self")
         return models.Flow.objects.get(id=id)
+    
+    @strawberry_django.field
+    def snapshot(self, id: strawberry.ID) -> types.Snapshot:
+        print("self")
+        return models.Snapshot.objects.get(id=id)
     
 
 

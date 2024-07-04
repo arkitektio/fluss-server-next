@@ -212,20 +212,30 @@ class DeleteSnapshotInput:
     snapshot: strawberry.ID
 
 
+
+
+
 class TrackInputModel(BaseModel):
-    edge: str
+    reference: str
     t: int 
     kind: str
     value: Any | None = None
-    run: str
+    run: strawberry.ID
     caused_by: list[str] = Field(default_factory=list)
+    message: str | None = None
+    source: str | None = None
+    handle: str | None = None
+
 
 
 @pydantic.input(TrackInputModel)
 class TrackInput:
-    edge: strawberry.ID
+    reference: str
     t: int 
     kind: enums.RunEventKind
     value: scalars.EventValue | None = None
     run: strawberry.ID
     caused_by: list[strawberry.ID] 
+    message: str | None = None
+    source: str | None = None
+    handle: str | None = None
