@@ -78,6 +78,16 @@ class RunEventKind(str, Enum):
     COMPLETE = "COMPLETE"
     UNKNOWN = "UNKNOWN"
 
+@strawberry.enum
+class RunStatus(str, Enum):
+    """Event Type for the Event Operator"""
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+
+
+
+
+
 
 @strawberry.enum
 class GraphNodeKind(str, Enum):

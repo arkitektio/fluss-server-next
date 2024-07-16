@@ -296,6 +296,7 @@ class Run:
     flow: "Flow"
     assignation: strawberry.ID
     snapshots: list["Snapshot"]
+    status: enums.RunStatus
 
     @strawberry_django.field()
     def latest_snapshot(self, info) -> Optional["Snapshot"]:

@@ -1,6 +1,6 @@
 from kante.types import Info
 import strawberry
-from reaktion import types, models, inputs
+from reaktion import types, models, inputs, enums
 import logging
 
 logger = logging.getLogger(__name__)
@@ -11,8 +11,15 @@ def create_run(info: Info, input: inputs.CreateRunInput) -> types.Run:
     run, created = models.Run.objects.update_or_create(
         flow_id=input.flow,
         assignation=input.assignation,
-        defaults=dict(snapshot_interval=input.snapshot_interval),
+        defaults=dict(snapshot_interval=input.snapshot_interval, status=enums.RunStatus.RUNNING.value),
     )
+
+    return run
+
+
+def close_run(info: Info, input: inputs.CloseRunInput) -> types.Run:
+    run = models.Run.objects.get(id=input.run)
+    run.status = enums.RunStatus.COMPLETED.value
 
     return run
 

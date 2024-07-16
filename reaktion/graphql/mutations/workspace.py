@@ -19,7 +19,7 @@ class UpdateWorkspaceInput:
 def update_workspace(info: Info, input: UpdateWorkspaceInput) -> types.Workspace:
     graph = strawberry.asdict(input.graph)
 
-    models.Flow.objects.update_or_create(
+    flow, _ = models.Flow.objects.get_or_create(
         workspace_id=input.workspace,
         hash=hash_graph(graph),
         defaults=dict(
@@ -29,6 +29,13 @@ def update_workspace(info: Info, input: UpdateWorkspaceInput) -> types.Workspace
             graph=graph,
         ),
     )
+
+    if input.title:
+        flow.title = input.title
+    if input.description:
+        flow.description = input.description
+
+    flow.save()
 
     return models.Workspace.objects.get(id=input.workspace)
 

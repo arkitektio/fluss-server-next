@@ -67,6 +67,9 @@ class Mutation:
     create_run = strawberry_django.mutation(
         resolver=mutations.create_run
     )
+    close_run = strawberry_django.mutation(
+        resolver=mutations.close_run
+    )
     delete_run = strawberry_django.mutation(
         resolver=mutations.delete_run
     )
@@ -85,12 +88,16 @@ class Mutation:
 @strawberry.type
 class Subscription:
     """The root subscription type"""
-    pass
+    events = strawberry.subscription(
+        resolver=subscriptions.events
+    )
+
 
 
 schema = strawberry.Schema(
     query=Query,
     mutation=Mutation,
+    subscription=Subscription,
     directives=[upper, replace, relation],
     extensions=[DjangoOptimizerExtension, KoherentExtension],
     types=[

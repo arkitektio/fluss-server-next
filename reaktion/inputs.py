@@ -175,6 +175,13 @@ class CreateRunInputModel(BaseModel):
     snapshot_interval: int
     assignation: str 
 
+class CloseRunInputModel(BaseModel):
+    run: str
+
+@pydantic.input(CloseRunInputModel)
+class CloseRunInput:
+    run: strawberry.ID
+
 
 @pydantic.input(CreateRunInputModel)
 class CreateRunInput:

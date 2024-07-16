@@ -105,7 +105,7 @@ class Run(models.Model):
     )
 
     assignation = models.CharField(null=True, blank=True, max_length=1000)
-    status = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(max_length=100, default="RUNNING")
     snapshot_interval = models.IntegerField(null=True, blank=True)
     pinned_by = models.ManyToManyField(
         get_user_model(),
@@ -185,3 +185,6 @@ class TraceEvent(models.Model):
     value = models.CharField(max_length=1000, blank=True)
     state = models.CharField(max_length=1000, blank=True)
     created_at = models.DateTimeField(auto_created=True, auto_now_add=True)
+
+
+from .signals import *
