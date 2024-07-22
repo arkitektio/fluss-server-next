@@ -172,6 +172,8 @@ CACHES = {
     }
 }
 
+CSRF_TRUSTED_ORIGINS = conf.get("csrf_trusted_origins", ["http://localhost", "https://localhost"])
+FORCE_SCRIPT_NAME = conf.get("force_script_name", "")
 
 CACHE_TTL_DEFAULT = 60 * 15
 
