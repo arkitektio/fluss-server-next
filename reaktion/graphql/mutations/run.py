@@ -6,7 +6,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-
 def create_run(info: Info, input: inputs.CreateRunInput) -> types.Run:
     run, created = models.Run.objects.update_or_create(
         flow_id=input.flow,
@@ -20,6 +19,7 @@ def create_run(info: Info, input: inputs.CreateRunInput) -> types.Run:
 def close_run(info: Info, input: inputs.CloseRunInput) -> types.Run:
     run = models.Run.objects.get(id=input.run)
     run.status = enums.RunStatus.COMPLETED.value
+    run.save()
 
     return run
 
@@ -29,11 +29,9 @@ def delete_run(info: Info, input: inputs.DeleteRunInput) -> strawberry.ID:
     run.delete()
     return input.run
 
+
 def snapshot(info: Info, input: inputs.SnapshotRunInput) -> types.Snapshot:
-    snapshot = models.Snapshot.objects.create(
-        run_id=input.run,
-        t=input.t
-    )
+    snapshot = models.Snapshot.objects.create(run_id=input.run, t=input.t)
     return snapshot
 
 
@@ -44,15 +42,5 @@ def delete_snapshot(info: Info, input: inputs.DeleteSnapshotInput) -> strawberry
 
 
 def track(info: Info, input: inputs.TrackInput) -> types.RunEvent:
-    event = models.RunEvent.objects.create(
-        reference=input.reference,
-        run_id=input.run,
-        t=input.t,
-        kind=input.kind,
-        value=input.value,
-        caused_by=input.caused_by,
-        source=input.source,
-        handle=input.handle
-
-    )
+    event = models.RunEvent.objects.create(reference=input.reference, run_id=input.run, t=input.t, kind=input.kind, value=input.value, caused_by=input.caused_by, source=input.source, handle=input.handle)
     return event
