@@ -81,6 +81,8 @@ class RekuestNodeModel(BaseModel):
     allow_local_execution: bool
     binds: rmodels.BindsModel
     node_kind: str
+    
+
 
 @pydantic.interface(RekuestNodeModel)
 class RekuestNode:
@@ -89,6 +91,8 @@ class RekuestNode:
     allow_local_execution: bool
     binds: rtypes.Binds
     node_kind: renums.NodeKind
+
+
 
 
 
