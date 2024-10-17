@@ -241,6 +241,7 @@ class TrackInput:
     t: int 
     kind: enums.RunEventKind
     value: scalars.EventValue | None = None
+    exception: str | None = None
     run: strawberry.ID
     caused_by: list[strawberry.ID] 
     message: str | None = None

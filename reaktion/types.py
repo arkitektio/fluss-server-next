@@ -322,7 +322,8 @@ class RunEvent:
     id: strawberry.ID
     t: int
     caused_by: list[strawberry.ID]
-    value: scalars.EventValue
+    value: scalars.EventValue | None = None
+    exception: str | None = None
     kind: enums.RunEventKind
     handle: str      
     source: str

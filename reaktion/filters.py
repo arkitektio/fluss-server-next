@@ -85,3 +85,4 @@ class ReactiveTemplateFilter:
         if self.search is None:
             return queryset
         return queryset.filter(name__icontains=self.search)
+
