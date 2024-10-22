@@ -254,12 +254,13 @@ class Flow:
 
 
 @strawberry_django.type(
-    models.Workspace, filters=filters.WorkspaceFilter, pagination=True
+    models.Workspace, filters=filters.WorkspaceFilter, pagination=True, order=filters.WorkspaceOrder
 )
 class Workspace:
     id: strawberry.ID
     title: str
     description: str | None = None
+    created_at: datetime.datetime
 
     @strawberry_django.field()
     def latest_flow(self, info) -> Optional[Flow]:

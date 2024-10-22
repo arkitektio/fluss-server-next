@@ -230,6 +230,7 @@ class TrackInputModel(BaseModel):
     run: strawberry.ID
     caused_by: list[str] = Field(default_factory=list)
     message: str | None = None
+    exception: str | None = None
     source: str | None = None
     handle: str | None = None
 

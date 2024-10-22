@@ -42,5 +42,5 @@ def delete_snapshot(info: Info, input: inputs.DeleteSnapshotInput) -> strawberry
 
 
 def track(info: Info, input: inputs.TrackInput) -> types.RunEvent:
-    event = models.RunEvent.objects.create(reference=input.reference, run_id=input.run, t=input.t, kind=input.kind, value=input.value, caused_by=input.caused_by, source=input.source, handle=input.handle)
+    event = models.RunEvent.objects.create(reference=input.reference, run_id=input.run, t=input.t, kind=input.kind, value=input.value, caused_by=input.caused_by, source=input.source, handle=input.handle, exception=input.exception)
     return event

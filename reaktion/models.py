@@ -23,6 +23,7 @@ class Workspace(models.Model):
     creator = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, null=True, blank=True
     )
+    created_at = models.DateTimeField(auto_created=True, auto_now_add=True)
     pinned_by = models.ManyToManyField(
         get_user_model(),
         related_name="pinned_workspaces",
@@ -146,6 +147,7 @@ class RunEvent(models.Model):
     handle = models.CharField(max_length=1000, blank=True)
     created_at = models.DateTimeField(auto_created=True, auto_now_add=True)
     value = models.JSONField(null=True, blank=True)
+    exception = models.CharField(max_length=2000, blank=True, null=True)
 
     def __str__(self) -> str:
         return f"Events for {self.run}"

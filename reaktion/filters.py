@@ -32,6 +32,21 @@ class WorkspaceFilter:
         return queryset.filter(name__icontains=self.search)
     
 
+
+@strawberry_django.order(models.Workspace)
+class WorkspaceOrder:
+    created_at: strawberry.auto
+
+
+
+
+
+
+
+
+
+    
+
 @strawberry_django.filter(models.Run)
 class RunFilter:
     ids: list[strawberry.ID] | None
