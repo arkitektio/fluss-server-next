@@ -37,7 +37,9 @@ class WorkspaceFilter:
 class WorkspaceOrder:
     created_at: strawberry.auto
 
-
+@strawberry_django.filter(models.Run)
+class RunOrder:
+    created_at: strawberry.auto
 
 
 

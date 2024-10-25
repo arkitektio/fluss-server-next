@@ -293,7 +293,7 @@ class ReactiveTemplate:
         return []
 
 
-@strawberry_django.type(models.Run, filters=filters.RunFilter, pagination=True)
+@strawberry_django.type(models.Run, filters=filters.RunFilter, order=filters.RunOrder, pagination=True)
 class Run:
     id: strawberry.ID
     created_at: datetime.datetime
