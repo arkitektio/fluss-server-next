@@ -261,6 +261,7 @@ class Workspace:
     title: str
     description: str | None = None
     created_at: datetime.datetime
+    flows: list["Flow"]
 
     @strawberry_django.field()
     def latest_flow(self, info) -> Optional[Flow]:
