@@ -1,9 +1,8 @@
-
-
 from .inputs import PortDemandInput, PortMatchInput
 from django.db import connection
 import re
 import typing as t
+
 qt = re.compile(r"@(?P<package>[^\/]*)\/(?P<interface>[^\/]*)")
 
 
@@ -12,7 +11,7 @@ def build_child_recursively(item: PortMatchInput, prefix, value_path, parts, par
         parts.append(f"{prefix}->>'key' = %({value_path}_key)s")
         params[f"{value_path}_key"] = item.key
 
-    if  item.kind:
+    if item.kind:
         parts.append(f"{prefix}->>'kind' = %({value_path}_kind)s")
         params[f"{value_path}_kind"] = item.kind
 
@@ -63,7 +62,12 @@ def build_sql_for_item_recursive(item: PortMatchInput, at_value=None):
     return (" AND ".join(sql_parts), params)
 
 
-def build_params(search_params: list[PortMatchInput] | None, type: t.Literal["args", "returns"] = "args", force_length: t.Optional[int] = None, force_non_nullable_length: t.Optional[int] = None):
+def build_params(
+    search_params: list[PortMatchInput] | None,
+    type: t.Literal["args", "returns"] = "args",
+    force_length: t.Optional[int] = None,
+    force_non_nullable_length: t.Optional[int] = None,
+):
     individual_queries = []
     all_params = {}
     if search_params:
@@ -89,24 +93,28 @@ def build_params(search_params: list[PortMatchInput] | None, type: t.Literal["ar
         """
         individual_queries.append(count_condition)
 
-
     full_sql = "SELECT id FROM facade_node WHERE " + " AND ".join(individual_queries)
     print(full_sql, all_params)
     return full_sql, all_params
 
 
+def filter_nodes_by_demands(
+    qs: t.Any,
+    demands: list[PortMatchInput] = None,
+    type: t.Literal["args", "returns"] = "args",
+    force_length: t.Optional[int] = None,
+    force_non_nullable_length: t.Optional[int] = None,
+):
 
-def filter_nodes_by_demands(qs: t.Any,
-                            demands: list[PortMatchInput] = None,
-                            type: t.Literal["args", "returns"] = "args",
-                            force_length: t.Optional[int] = None,
-                            force_non_nullable_length: t.Optional[int] = None
-                            ):
-    
     if type not in ["args", "returns"]:
         raise ValueError("Type must be either 'args' or 'returns'")
-    
-    full_sql, all_params = build_params(demands, type=type, force_length=force_length, force_non_nullable_length=force_non_nullable_length)
+
+    full_sql, all_params = build_params(
+        demands,
+        type=type,
+        force_length=force_length,
+        force_non_nullable_length=force_non_nullable_length,
+    )
 
     with connection.cursor() as cursor:
         cursor.execute(full_sql, all_params)
@@ -117,5 +125,3 @@ def filter_nodes_by_demands(qs: t.Any,
     return qs
 
     return qs
-
-

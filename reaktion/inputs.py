@@ -1,4 +1,3 @@
-
 from strawberry.experimental import pydantic
 from pydantic import BaseModel, Field
 from rekuest_core.inputs import models as rimodels
@@ -8,6 +7,7 @@ from reaktion import scalars, enums
 from typing import Any, Dict, Optional
 from strawberry import LazyType
 import strawberry
+
 
 class PositionInputModel(BaseModel):
     x: float
@@ -151,13 +151,12 @@ class ReactiveTemplateInput:
 @strawberry.input
 class PortMatchInput:
     at: int | None = None
-    key: str | None  = None
-    kind: renums.PortKind | None  = None
-    identifier: str | None  = None
-    nullable: bool | None  = None
-    variants: Optional[list[LazyType["PortDemandInput", __name__]]]  = None
-    child: Optional[LazyType["PortDemandInput", __name__]]  = None
- 
+    key: str | None = None
+    kind: renums.PortKind | None = None
+    identifier: str | None = None
+    nullable: bool | None = None
+    variants: Optional[list[LazyType["PortDemandInput", __name__]]] = None
+    child: Optional[LazyType["PortDemandInput", __name__]] = None
 
 
 @strawberry.input
@@ -168,15 +167,15 @@ class PortDemandInput:
     force_non_nullable_length: int | None = None
 
 
-
-
 class CreateRunInputModel(BaseModel):
     flow: str
     snapshot_interval: int
-    assignation: str 
+    assignation: str
+
 
 class CloseRunInputModel(BaseModel):
     run: str
+
 
 @pydantic.input(CloseRunInputModel)
 class CloseRunInput:
@@ -193,6 +192,7 @@ class CreateRunInput:
 class DeteteRunInputModel(BaseModel):
     run: str
 
+
 @pydantic.input(DeteteRunInputModel)
 class DeleteRunInput:
     run: strawberry.ID
@@ -201,30 +201,28 @@ class DeleteRunInput:
 class SnapshotRunInputModel(BaseModel):
     run: str
     events: list[str]
-    t : int
+    t: int
 
 
 @pydantic.input(SnapshotRunInputModel)
 class SnapshotRunInput:
     run: strawberry.ID
     events: list[strawberry.ID]
-    t : int
+    t: int
 
 
 class DeleteSnapshotInputModel(BaseModel):
     snapshot: str
+
 
 @pydantic.input(DeleteSnapshotInputModel)
 class DeleteSnapshotInput:
     snapshot: strawberry.ID
 
 
-
-
-
 class TrackInputModel(BaseModel):
     reference: str
-    t: int 
+    t: int
     kind: str
     value: Any | None = None
     run: strawberry.ID
@@ -235,16 +233,15 @@ class TrackInputModel(BaseModel):
     handle: str | None = None
 
 
-
 @pydantic.input(TrackInputModel)
 class TrackInput:
     reference: str
-    t: int 
+    t: int
     kind: enums.RunEventKind
     value: scalars.EventValue | None = None
     exception: str | None = None
     run: strawberry.ID
-    caused_by: list[strawberry.ID] 
+    caused_by: list[strawberry.ID]
     message: str | None = None
     source: str | None = None
     handle: str | None = None

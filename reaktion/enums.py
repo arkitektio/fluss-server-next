@@ -78,20 +78,19 @@ class RunEventKind(str, Enum):
     COMPLETE = "COMPLETE"
     UNKNOWN = "UNKNOWN"
 
+
 @strawberry.enum
 class RunStatus(str, Enum):
     """Event Type for the Event Operator"""
+
     RUNNING = "RUNNING"
     COMPLETED = "COMPLETED"
-
-
-
-
 
 
 @strawberry.enum
 class GraphNodeKind(str, Enum):
     """Event Type for the Event Operator"""
+
     REACTIVE = "REACTIVE"
     ARGS = "ARGS"
     RETURNS = "RETURNS"
@@ -131,8 +130,6 @@ class ReactiveImplementation(str, Enum):
 
     # JUST
     JUST = "JUST"
-
-    
 
     # String Operations
     PREFIX = "PREFIX"
@@ -180,5 +177,6 @@ class GraphEdgeKind(str, Enum):
 @strawberry.enum
 class DemandKind(str, Enum):
     """Scope of the Posrt"""
+
     ARGS = "args"
     RETURNS = "returns"

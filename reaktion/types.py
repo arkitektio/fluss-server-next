@@ -74,14 +74,12 @@ class AssignableNode:
     next_timeout: int | None
 
 
-
 class RekuestNodeModel(BaseModel):
     hash: str
     map_strategy: str
     allow_local_execution: bool
     binds: rmodels.BindsModel
     node_kind: str
-    
 
 
 @pydantic.interface(RekuestNodeModel)
@@ -93,18 +91,18 @@ class RekuestNode:
     node_kind: renums.NodeKind
 
 
-
-
-
-class RekuestMapNodeModel(GraphNodeModel, RetriableNodeModel, AssignableNodeModel, RekuestNodeModel):
+class RekuestMapNodeModel(
+    GraphNodeModel, RetriableNodeModel, AssignableNodeModel, RekuestNodeModel
+):
     kind: Literal["REKUEST_MAP"]
-    hello: str | None = None # This is a fake attribute to test the model
-    
+    hello: str | None = None  # This is a fake attribute to test the model
 
-class RekuestFilterNodeModel(GraphNodeModel, RetriableNodeModel, AssignableNodeModel, RekuestNodeModel):
+
+class RekuestFilterNodeModel(
+    GraphNodeModel, RetriableNodeModel, AssignableNodeModel, RekuestNodeModel
+):
     kind: Literal["REKUEST_FILTER"]
-    path: str | None = None #This is a fake attribute to test the model
-
+    path: str | None = None  # This is a fake attribute to test the model
 
 
 @pydantic.type(RekuestMapNodeModel)
@@ -138,9 +136,6 @@ class ReactiveNode(GraphNode):
     implementation: enums.ReactiveImplementation
 
 
-
-
-
 class ReturnNodeModel(GraphNodeModel):
     kind: Literal["RETURNS"]
     return_stuff: str | None = None
@@ -152,7 +147,11 @@ class ReturnNode(GraphNode):
 
 
 GraphNodeModelUnion = Union[
-    RekuestMapNodeModel, ReactiveNodeModel, ArgNodeModel, ReturnNodeModel, RekuestFilterNodeModel
+    RekuestMapNodeModel,
+    ReactiveNodeModel,
+    ArgNodeModel,
+    ReturnNodeModel,
+    RekuestFilterNodeModel,
 ]
 
 
@@ -254,7 +253,10 @@ class Flow:
 
 
 @strawberry_django.type(
-    models.Workspace, filters=filters.WorkspaceFilter, pagination=True, order=filters.WorkspaceOrder
+    models.Workspace,
+    filters=filters.WorkspaceFilter,
+    pagination=True,
+    order=filters.WorkspaceOrder,
 )
 class Workspace:
     id: strawberry.ID
@@ -288,13 +290,15 @@ class ReactiveTemplate:
     @strawberry_django.field()
     def constants(self, info) -> list[rtypes.Port]:
         return [rmodels.PortModel(**i) for i in self.constants]
-    
+
     @strawberry_django.field()
     def voids(self, info) -> list[rtypes.Port]:
         return []
 
 
-@strawberry_django.type(models.Run, filters=filters.RunFilter, order=filters.RunOrder, pagination=True)
+@strawberry_django.type(
+    models.Run, filters=filters.RunFilter, order=filters.RunOrder, pagination=True
+)
 class Run:
     id: strawberry.ID
     created_at: datetime.datetime
@@ -327,7 +331,7 @@ class RunEvent:
     value: scalars.EventValue | None = None
     exception: str | None = None
     kind: enums.RunEventKind
-    handle: str      
+    handle: str
     source: str
     created_at: datetime.datetime
 

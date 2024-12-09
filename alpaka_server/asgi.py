@@ -21,6 +21,7 @@ from django.urls import re_path  # noqa
 from kante.consumers import KanteHTTPConsumer, KanteWsConsumer  # noqa
 from kante.cors import CorsMiddleware  # noqa
 from .basepath import re_basepath  # noqa
+
 # Initialize Django ASGI application early to ensure the AppRegistry
 # is populated before importing code that may import ORM models.
 django_asgi_app = get_asgi_application()

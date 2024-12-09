@@ -10,7 +10,10 @@ def create_run(info: Info, input: inputs.CreateRunInput) -> types.Run:
     run, created = models.Run.objects.update_or_create(
         flow_id=input.flow,
         assignation=input.assignation,
-        defaults=dict(snapshot_interval=input.snapshot_interval, status=enums.RunStatus.RUNNING.value),
+        defaults=dict(
+            snapshot_interval=input.snapshot_interval,
+            status=enums.RunStatus.RUNNING.value,
+        ),
     )
 
     return run
@@ -42,5 +45,15 @@ def delete_snapshot(info: Info, input: inputs.DeleteSnapshotInput) -> strawberry
 
 
 def track(info: Info, input: inputs.TrackInput) -> types.RunEvent:
-    event = models.RunEvent.objects.create(reference=input.reference, run_id=input.run, t=input.t, kind=input.kind, value=input.value, caused_by=input.caused_by, source=input.source, handle=input.handle, exception=input.exception)
+    event = models.RunEvent.objects.create(
+        reference=input.reference,
+        run_id=input.run,
+        t=input.t,
+        kind=input.kind,
+        value=input.value,
+        caused_by=input.caused_by,
+        source=input.source,
+        handle=input.handle,
+        exception=input.exception,
+    )
     return event

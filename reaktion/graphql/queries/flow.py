@@ -1,4 +1,3 @@
-
 import strawberry
 from kante.types import Info
 from reaktion import models, types

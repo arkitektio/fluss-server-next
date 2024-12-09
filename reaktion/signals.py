@@ -8,9 +8,10 @@ from guardian.shortcuts import assign_perm
 logger = logging.getLogger(__name__)
 logger.info("Loading signals")
 
+
 @receiver(post_save, sender=models.RunEvent)
 def event_singal(sender, instance=None, **kwargs):
     print("Signal received!")
     if instance:
-        print( [f"run_{instance.run.id}"])
+        print([f"run_{instance.run.id}"])
         runevent_created_broadcast(instance.id, [f"run_{instance.run.id}"])

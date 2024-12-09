@@ -25,29 +25,22 @@ class WorkspaceFilter:
         if self.ids is None:
             return queryset
         return queryset.filter(id__in=self.ids)
-    
+
     def filter_search(self, queryset, info):
         if self.search is None:
             return queryset
         return queryset.filter(name__icontains=self.search)
-    
 
 
 @strawberry_django.order(models.Workspace)
 class WorkspaceOrder:
     created_at: strawberry.auto
 
+
 @strawberry_django.filter(models.Run)
 class RunOrder:
     created_at: strawberry.auto
 
-
-
-
-
-
-
-    
 
 @strawberry_django.filter(models.Run)
 class RunFilter:
@@ -58,7 +51,7 @@ class RunFilter:
         if self.ids is None:
             return queryset
         return queryset.filter(id__in=self.ids)
-    
+
     def filter_search(self, queryset, info):
         if self.search is None:
             return queryset
@@ -75,7 +68,7 @@ class FlowFilter:
         if self.ids is None:
             return queryset
         return queryset.filter(id__in=self.ids)
-    
+
     def filter_search(self, queryset, info):
         if self.search is None:
             return queryset
@@ -97,9 +90,8 @@ class ReactiveTemplateFilter:
         if self.implementations is None:
             return queryset
         return queryset.filter(implementation__in=self.implementations)
-    
+
     def filter_search(self, queryset, info):
         if self.search is None:
             return queryset
         return queryset.filter(name__icontains=self.search)
-
