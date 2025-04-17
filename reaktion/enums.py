@@ -31,6 +31,10 @@ class ReactiveImplementationChoices(TextChoices):
         "BUFFER_UNTIL",
         "BUFFER_UNTIL (Buffer values until signal is send)",
     )
+    BUFFER_COUNT  = (
+        "BUFFER_COUNT",
+        "BUFFER_COUNT (Butffer values until the count is reacht)"
+    )
 
     # Delay
     DELAY = "DELAY", "DELAY (Delay the data)"
@@ -56,6 +60,9 @@ class ReactiveImplementationChoices(TextChoices):
 
     # Filter operations
     FILTER = "FILTER", "FILTER (Filter the data of a union)"
+    
+    #Roarder
+    REORDER = "REORDER", "REORDER (Reorder the data)"
 
     GATE = "GATE", "GATE (Gate the data, first value is gated, second is gate)"
 
@@ -66,7 +73,6 @@ class ReactiveImplementationChoices(TextChoices):
     IF = "IF", "IF (If condition is met)"
     AND = "AND", "AND (AND condition)"
     ALL = "ALL", "ALL (establish if all values are Trueish)"
-    REORDER = "REORDER", "REORDER (Reorder the data)"
 
 
 @strawberry.enum
@@ -106,8 +112,11 @@ class ReactiveImplementation(str, Enum):
     ZIP = "ZIP"
     COMBINELATEST = "COMBINELATEST"
     WITHLATEST = "WITHLATEST"
+    
+    # Buffer
     BUFFER_COMPLETE = "BUFFER_COMPLETE"
-    BUFFER_UNTIL = "BUFFER_UNTILs"
+    BUFFER_UNTIL = "BUFFER_UNTIL"
+    BUFFER_COUNT = "BUFFER_COUNT"
 
     # Delay
     DELAY = "DELAY"
@@ -141,6 +150,10 @@ class ReactiveImplementation(str, Enum):
     GATE = "GATE"
 
     TO_LIST = "TO_LIST"
+
+    # Reorder
+    REORDER = "REORDER"
+
 
     FOREACH = "FOREACH"
 

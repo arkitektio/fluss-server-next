@@ -113,7 +113,7 @@ class PortGroupInputModel(BaseModel):
     title: str | None
     description: str | None
     effects: list[EffectInputModel] | None
-    ports: list[str] | None
+    ports: list[str]
 
 
 class DefinitionInputModel(BaseModel):
