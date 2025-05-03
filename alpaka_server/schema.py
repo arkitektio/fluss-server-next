@@ -75,8 +75,8 @@ schema = strawberry.Schema(
     directives=[upper, replace, relation],
     extensions=[DjangoOptimizerExtension, KoherentExtension],
     types=[
-        types.RekuestFilterNode,
-        types.RekuestMapNode,
+        types.RekuestFilterActionNode,
+        types.RekuestMapActionNode,
         types.RetriableNode,
         types.ArgNode,
         types.ReturnNode,

@@ -35,7 +35,7 @@ class GraphNodeInputModel(BaseModel):
     title: str | None = None
     retries: int | None = None
     retry_delay: int | None = None
-    node_kind: renums.NodeKind | None = None
+    action_kind: renums.ActionKind | None = None
     next_timeout: int | None = None
     hash: str | None = None
     map_strategy: enums.MapStrategy | None = None
@@ -60,7 +60,7 @@ class GraphNodeInput:
     title: str | None = None
     retries: int | None = None
     retry_delay: int | None = None
-    node_kind: renums.NodeKind | None = None
+    action_kind: renums.ActionKind | None = None
     next_timeout: int | None = None
     hash: str | None = None
     map_strategy: enums.MapStrategy | None = None

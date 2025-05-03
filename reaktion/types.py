@@ -74,44 +74,40 @@ class AssignableNode:
     next_timeout: int | None
 
 
-class RekuestNodeModel(BaseModel):
+class RekuestActionNodeModel(BaseModel):
     hash: str
     map_strategy: str
     allow_local_execution: bool
     binds: rmodels.BindsModel
-    node_kind: str
+    action_kind: str
 
 
-@pydantic.interface(RekuestNodeModel)
-class RekuestNode:
+@pydantic.interface(RekuestActionNodeModel)
+class RekuestActionNode:
     hash: str
     map_strategy: str
     allow_local_execution: bool
     binds: rtypes.Binds
-    node_kind: renums.NodeKind
+    action_kind: renums.ActionKind
 
 
-class RekuestMapNodeModel(
-    GraphNodeModel, RetriableNodeModel, AssignableNodeModel, RekuestNodeModel
-):
+class RekuestMapActionNodeModel(GraphNodeModel, RetriableNodeModel, AssignableNodeModel, RekuestActionNodeModel):
     kind: Literal["REKUEST_MAP"]
     hello: str | None = None  # This is a fake attribute to test the model
 
 
-class RekuestFilterNodeModel(
-    GraphNodeModel, RetriableNodeModel, AssignableNodeModel, RekuestNodeModel
-):
+class RekuestFilterActionNodeModel(GraphNodeModel, RetriableNodeModel, AssignableNodeModel, RekuestActionNodeModel):
     kind: Literal["REKUEST_FILTER"]
     path: str | None = None  # This is a fake attribute to test the model
 
 
-@pydantic.type(RekuestMapNodeModel)
-class RekuestMapNode(GraphNode, RetriableNode, AssignableNode, RekuestNode):
+@pydantic.type(RekuestMapActionNodeModel)
+class RekuestMapActionNode(GraphNode, RetriableNode, AssignableNode, RekuestActionNode):
     hello: str | None = None
 
 
-@pydantic.type(RekuestFilterNodeModel)
-class RekuestFilterNode(GraphNode, RetriableNode, AssignableNode, RekuestNode):
+@pydantic.type(RekuestFilterActionNodeModel)
+class RekuestFilterActionNode(GraphNode, RetriableNode, AssignableNode, RekuestActionNode):
     path: str | None = None
 
 
@@ -147,11 +143,11 @@ class ReturnNode(GraphNode):
 
 
 GraphNodeModelUnion = Union[
-    RekuestMapNodeModel,
+    RekuestMapActionNodeModel,
     ReactiveNodeModel,
     ArgNodeModel,
     ReturnNodeModel,
-    RekuestFilterNodeModel,
+    RekuestFilterActionNodeModel,
 ]
 
 
@@ -270,9 +266,7 @@ class Workspace:
         return self.flows.order_by("-created_at").first()
 
 
-@strawberry_django.type(
-    models.ReactiveTemplate, filters=filters.ReactiveTemplateFilter, pagination=True
-)
+@strawberry_django.type(models.ReactiveTemplate, filters=filters.ReactiveTemplateFilter, pagination=True)
 class ReactiveTemplate:
     id: strawberry.ID
     implementation: enums.ReactiveImplementation
@@ -296,9 +290,7 @@ class ReactiveTemplate:
         return []
 
 
-@strawberry_django.type(
-    models.Run, filters=filters.RunFilter, order=filters.RunOrder, pagination=True
-)
+@strawberry_django.type(models.Run, filters=filters.RunFilter, order=filters.RunOrder, pagination=True)
 class Run:
     id: strawberry.ID
     created_at: datetime.datetime
