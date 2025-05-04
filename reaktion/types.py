@@ -1,3 +1,4 @@
+from dataclasses import Field
 import strawberry_django
 from reaktion import models, scalars, enums, filters
 import strawberry
@@ -10,6 +11,7 @@ import datetime
 from rekuest_core.objects import types as rtypes
 from rekuest_core.objects import models as rmodels
 from rekuest_core import enums as renums
+from strawberry import LazyType
 
 
 class PositionModel(BaseModel):
