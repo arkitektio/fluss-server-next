@@ -144,6 +144,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+STRAWBERRY_DJANGO = {
+    "USE_DEPRECATED_FILTERS": True,
+}
+
+
 
 AUTHENTIKATE = {
     "PUBLIC_KEY": conf.lok.get("public_key", None),
