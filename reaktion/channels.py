@@ -1,5 +1,6 @@
 from kante.channel import build_channel
+from reaktion.channel_signals import RunEventSignal
 
-runevent_created_broadcast, runevent_created_listen = build_channel(
-    "runevent_created_broadcast"
+run_event_channel = build_channel(
+    RunEventSignal
 )

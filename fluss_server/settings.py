@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "corsheaders",
     "channels_redis",
     "guardian",
     "simple_history",
@@ -76,7 +75,6 @@ STRAWBERRY_DJANGO = {
 }
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -86,7 +84,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "alpaka_server.urls"
+ROOT_URLCONF = "fluss_server.urls"
+MY_SCRIPT_NAME = conf.get("force_script_name", "fluss")
 
 TEMPLATES = [
     {
@@ -109,8 +108,8 @@ AUTHENTICATION_BACKENDS = (
     "guardian.backends.ObjectPermissionBackend",
 )
 
-WSGI_APPLICATION = "alpaka_server.wsgi.application"
-ASGI_APPLICATION = "alpaka_server.asgi.application"
+WSGI_APPLICATION = "fluss_server.wsgi.application"
+ASGI_APPLICATION = "fluss_server.asgi.application"
 
 
 # Database
@@ -175,7 +174,6 @@ CACHES = {
 CSRF_TRUSTED_ORIGINS = conf.get(
     "csrf_trusted_origins", ["http://localhost", "https://localhost"]
 )
-FORCE_SCRIPT_NAME = conf.get("force_script_name", "")
 
 CACHE_TTL_DEFAULT = 60 * 15
 

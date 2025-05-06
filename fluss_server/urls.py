@@ -20,9 +20,8 @@ from django.urls import path
 from strawberry.django.views import AsyncGraphQLView
 from django.urls import include
 from .schema import schema
-from .basepath import basepath
+from kante.path import dynamicpath
 
 urlpatterns = [
-    basepath("admin/", admin.site.urls),
-    basepath("graphql", AsyncGraphQLView.as_view(schema=schema)),
+    dynamicpath("admin/", admin.site.urls),
 ]

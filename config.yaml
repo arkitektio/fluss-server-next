@@ -1,5 +1,5 @@
 db:
-  db_name: omero_db
+  db_name: fluss_db
   engine: django.db.backends.postgresql
   host: db
   username: fostgres

@@ -1,15 +1,14 @@
 import strawberry
 from strawberry_django.optimizer import DjangoOptimizerExtension
-from kante.directives import upper, replace, relation
 from reaktion import types, models
 from reaktion.graphql import mutations
 from reaktion.graphql import subscriptions
 from reaktion.graphql import queries
 import strawberry_django
 from koherent.strawberry.extension import KoherentExtension
+from authentikate.strawberry.extension import AuthentikateExtension
 from typing import List
 from rekuest_core.constants import interface_types
-from authentikate.strawberry.permissions import IsAuthenticated
 
 
 @strawberry.type
@@ -50,7 +49,6 @@ class Mutation:
 
     update_workspace = strawberry_django.mutation(resolver=mutations.update_workspace)
     create_workspace = strawberry_django.mutation(
-        permission_classes=[IsAuthenticated],
         resolver=mutations.create_workspace,
     )
     create_run = strawberry_django.mutation(resolver=mutations.create_run)
@@ -72,8 +70,7 @@ schema = strawberry.Schema(
     query=Query,
     mutation=Mutation,
     subscription=Subscription,
-    directives=[upper, replace, relation],
-    extensions=[DjangoOptimizerExtension, KoherentExtension],
+    extensions=[DjangoOptimizerExtension, KoherentExtension, AuthentikateExtension],
     types=[
         types.RekuestFilterActionNode,
         types.RekuestMapActionNode,

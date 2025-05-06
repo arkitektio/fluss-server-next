@@ -4,13 +4,13 @@ version: '3.7'
 services:
   db:
     environment:
-      POSTGRES_MULTIPLE_DATABASES: kluster_db
+      POSTGRES_MULTIPLE_DATABASES: fluss_db
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: fostgres
     image: jhnnsrs/daten:next
     labels:
       - "arkitekt.default.service=db"
-  alpaka:
+  fluss:
     build: .
     ports:
     - 9030:80
@@ -20,25 +20,7 @@ services:
       - "traefik.http.routers.mikro.entrypoints=kluster"
       - "traefik.http.services.mikro.loadbalancer.server.port=8080"
       - "traefik.http.routers.mikro.tls.certresolver=myresolver"
-  ollama:
-    image: ollama/ollama
-    ports:
-      - 11434:11434
-    volumes:
-      - ./ollama:/root/.ollama
-  open-webui:
-    image: ghcr.io/open-webui/open-webui:main
-    container_name: open-webui
-    volumes:
-      - ./open-webui:/app/backend/data
-    depends_on:
-      - ollama
-    ports:
-      - 7777:8080
-    environment:
-      - 'OLLAMA_BASE_URL=http://ollama:11434'
-    restart: unless-stopped
-    
+
   redis:
     image: redis:latest
     labels:
