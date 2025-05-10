@@ -85,7 +85,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "fluss_server.urls"
-MY_SCRIPT_NAME = conf.get("force_script_name", "fluss")
+MY_SCRIPT_NAME = conf.get("my_script_name", "")
 
 TEMPLATES = [
     {
@@ -155,7 +155,8 @@ AUTHENTIKATE = {
         "iss": "lok",
         "kind": "rsa",
         "public_key": conf.lok.get("public_key", None),
-    }]
+    }],
+    "STATIC_TOKENS": conf.lok.get("static_tokens", {}),
 }
 
 
