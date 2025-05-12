@@ -149,13 +149,14 @@ STRAWBERRY_DJANGO = {
 }
 
 
-
 AUTHENTIKATE = {
-    "ISSUERS": [{
-        "iss": "lok",
-        "kind": "rsa",
-        "public_key": conf.lok.get("public_key", None),
-    }],
+    "ISSUERS": [
+        {
+            "iss": "lok",
+            "kind": "rsa",
+            "public_key": conf.lok.get("public_key", None),
+        }
+    ],
     "STATIC_TOKENS": conf.lok.get("static_tokens", {}),
 }
 
@@ -172,9 +173,7 @@ CACHES = {
     }
 }
 
-CSRF_TRUSTED_ORIGINS = conf.get(
-    "csrf_trusted_origins", ["http://localhost", "https://localhost"]
-)
+CSRF_TRUSTED_ORIGINS = conf.get("csrf_trusted_origins", ["http://localhost", "https://localhost"])
 
 CACHE_TTL_DEFAULT = 60 * 15
 
