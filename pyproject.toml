@@ -22,6 +22,7 @@ dependencies = [
     "rich>=14.0.0",
     "koherent>=0.2.0",
     "django-redis>=5.4.0",
+    "django-health-check>=3.20.0",
 ]
 
 [dependency-groups]
