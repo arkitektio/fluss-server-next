@@ -87,7 +87,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "fluss_server.urls"
-MY_SCRIPT_NAME = conf.get("my_script_name", "")
+MY_SCRIPT_NAME = conf.get("force_script_name", "")
 
 TEMPLATES = [
     {
