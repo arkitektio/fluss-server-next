@@ -27,6 +27,7 @@ def update_workspace(info: Info, input: UpdateWorkspaceInput) -> types.Workspace
             description=input.description or "No description",
             creator=info.context.request.user,
             graph=graph,
+            organization=info.context.request.organization
         ),
     )
 
@@ -54,6 +55,7 @@ def create_workspace(info: Info, input: CreateWorkspaceInput) -> types.Workspace
         title=title,
         description=input.description,
         creator=info.context.request.user,
+        organization=info.context.request.organization
     )
 
     nodes = [
@@ -100,6 +102,7 @@ def create_workspace(info: Info, input: CreateWorkspaceInput) -> types.Workspace
         title=title,
         description=input.description,
         creator=info.context.request.user,
+        organization=info.context.request.organization
     )
 
     return workspace

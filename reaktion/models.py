@@ -1,7 +1,7 @@
 import uuid
 
 from django.contrib.auth import get_user_model
-
+from authentikate.models import Organization, User
 # Create your models here.
 from django.db import models
 
@@ -22,6 +22,10 @@ class Workspace(models.Model):
     description = models.CharField(max_length=10000, null=True)
     creator = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, null=True, blank=True
+    )
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.CASCADE,
     )
     created_at = models.DateTimeField(auto_created=True, auto_now_add=True)
     pinned_by = models.ManyToManyField(
@@ -44,6 +48,10 @@ class Flow(models.Model):
     )
     restrict = models.JSONField(
         default=list, help_text="Restrict access to specific nodes for this diagram"
+    )
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.CASCADE,
     )
     version = models.CharField(max_length=100, default="1.0alpha")
     title = models.CharField(max_length=10000, null=True)
