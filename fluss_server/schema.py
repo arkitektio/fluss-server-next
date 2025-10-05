@@ -24,6 +24,9 @@ class Query:
     reactive_template = strawberry_django.field(resolver=queries.reactive_template)
     events_between = strawberry_django.field(resolver=queries.events_between)
 
+    # Stats
+    workspace_stats: types.WorkspaceStats = strawberry.field(resolver=types.WorkspaceStatsResolver)
+
     @strawberry_django.field
     def run(self, id: strawberry.ID) -> types.Run:
         return models.Run.objects.get(id=id)

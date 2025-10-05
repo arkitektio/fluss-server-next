@@ -12,6 +12,24 @@ from rekuest_core.objects import types as rtypes
 from rekuest_core.objects import models as rmodels
 from rekuest_core import enums as renums
 from strawberry import LazyType
+from .type_gen import create_stats_type
+
+
+def build_prescoped_queryset(info, queryset, field="organization"):
+    print(info)
+    if info.variable_values.get("filters", {}).get("scope") is None:
+        queryset = queryset.filter(**{field: info.context.request.organization})
+        return queryset
+
+    else:
+        raise Exception("Custom scopes not implemented yet")
+
+
+def build_prescoper(field="organization"):
+    def prescoper(queryset, info):
+        return build_prescoped_queryset(info, queryset, field=field)
+
+    return prescoper
 
 
 class PositionModel(BaseModel):
@@ -266,6 +284,17 @@ class Workspace:
     @strawberry_django.field()
     def latest_flow(self, info) -> Optional[Flow]:
         return self.flows.order_by("-created_at").first()
+
+
+WorkspaceStats, WorkspaceStatsResolver = create_stats_type(
+    model=models.Workspace,
+    filters=filters.WorkspaceFilter,
+    allowed_fields={
+        "created_at": "created_at",
+    },
+    allowed_datetime_fields={"created_at": "created_at"},
+    prescope=build_prescoper(field="organization"),
+)
 
 
 @strawberry_django.type(models.ReactiveTemplate, filters=filters.ReactiveTemplateFilter, pagination=True)
