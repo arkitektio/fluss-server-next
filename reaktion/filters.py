@@ -17,7 +17,6 @@ class SearchFilter:
 
 @strawberry_django.filter(models.Workspace)
 class WorkspaceFilter:
-    name: Optional[FilterLookup[str]] | None
     ids: list[strawberry.ID] | None
     search: str | None
 
@@ -37,7 +36,7 @@ class WorkspaceOrder:
     created_at: strawberry.auto
 
 
-@strawberry_django.filter(models.Run)
+@strawberry_django.order(models.Run)
 class RunOrder:
     created_at: strawberry.auto
 
