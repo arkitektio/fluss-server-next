@@ -83,6 +83,7 @@ schema = strawberry.Schema(
         types.VanillaEdge,
         types.LoggingEdge,
         types.ReactiveNode,
+        types.AgentSubFlowNode,
     ]
     + interface_types,
 )

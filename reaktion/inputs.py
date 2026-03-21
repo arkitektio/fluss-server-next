@@ -25,9 +25,9 @@ class GraphNodeInputModel(BaseModel):
     kind: enums.GraphNodeKind
     position: PositionInput
     parent_node: str | None = None
-    ins: list[list[rimodels.PortInputModel]]  # A set of streams
-    outs: list[list[rimodels.PortInputModel]]
-    constants: list[rimodels.PortInputModel]
+    ins: list[list[rimodels.PortInputModel]] | None = None  # A set of streams
+    outs: list[list[rimodels.PortInputModel]] | None = None
+    constants: list[rimodels.PortInputModel] | None = None
     voids: list[rimodels.PortInputModel]
     constants_map: Dict[str, Any]
     globals_map: Dict[str, Any]
@@ -42,6 +42,12 @@ class GraphNodeInputModel(BaseModel):
     allow_local_execution: bool | None = None
     binds: rimodels.BindsInputModel | None = None
     implementation: enums.ReactiveImplementation | None = None
+    app_filter: str | None = None
+    version_filter: str | None = None
+    device_filter: str | None = None
+    user_filter: str | None = None
+    instance_filter: str | None = None
+    auto_resolvable: bool = False
 
 
 @pydantic.input(GraphNodeInputModel)
@@ -50,12 +56,12 @@ class GraphNodeInput:
     kind: enums.GraphNodeKind
     position: PositionInput
     parent_node: str | None = None
-    ins: list[list[ritypes.PortInput]]  # A set of streams
-    outs: list[list[ritypes.PortInput]]
-    constants: list[ritypes.PortInput]
-    voids: list[ritypes.PortInput]
-    constants_map: scalars.ValueMap
-    globals_map: scalars.ValueMap
+    ins: list[list[ritypes.PortInput]] | None = None  # A set of streams
+    outs: list[list[ritypes.PortInput]] | None = None
+    constants: list[ritypes.PortInput] | None = None
+    voids: list[ritypes.PortInput] | None = None
+    constants_map: scalars.ValueMap | None = None
+    globals_map: scalars.ValueMap | None = None
     description: str | None = None
     title: str | None = None
     retries: int | None = None
@@ -71,6 +77,15 @@ class GraphNodeInput:
     # Placeholder for the node kind
     hello: str | None = None
     path: str | None = None
+    app_filter: str | None = None
+    version_filter: str | None = None
+    device_filter: str | None = None
+    user_filter: str | None = None
+    instance_filter: str | None = None
+    auto_resolvable: bool = strawberry.field(
+        default=False,
+        description="Whether this dependency is auto resolvable or not. If so we will try to automatically resolve it based on the demands specified in the dependency and the capabilities of the available agents in the system. This is used to identify the demand in the system. Attention if any of the dependencies of this agent dependency is not auto resolvable, this dependency will also not be auto resolvable",
+    )
 
 
 class StreamItemInputModel(BaseModel):

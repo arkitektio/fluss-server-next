@@ -162,12 +162,36 @@ class ReturnNode(GraphNode):
     return_stuff: str | None = None
 
 
+class AgentSubFlowNodeModel(GraphNodeModel):
+    kind: Literal["AGENT_SUBFLOW"]
+    app_filter: str | None = None
+    version_filter: str | None = None
+    device_filter: str | None = None
+    instance_filter: str | None = None
+    user_filter: str | None = None
+    auto_resolvable: bool = False
+
+
+@pydantic.type(AgentSubFlowNodeModel)
+class AgentSubFlowNode(GraphNode):
+    app_filter: str | None = None
+    version_filter: str | None = None
+    device_filter: str | None = None
+    instance_filter: str | None = None
+    user_filter: str | None = None
+    auto_resolvable: bool = strawberry.field(
+        default=False,
+        description="Whether this dependency is auto resolvable or not. If so we will try to automatically resolve it based on the demands specified in the dependency and the capabilities of the available agents in the system. This is used to identify the demand in the system. Attention if any of the dependencies of this agent dependency is not auto resolvable, this dependency will also not be auto resolvable",
+    )
+
+
 GraphNodeModelUnion = Union[
     RekuestMapActionNodeModel,
     ReactiveNodeModel,
     ArgNodeModel,
     ReturnNodeModel,
     RekuestFilterActionNodeModel,
+    AgentSubFlowNodeModel,
 ]
 
 

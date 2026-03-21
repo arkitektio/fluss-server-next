@@ -31,10 +31,7 @@ class ReactiveImplementationChoices(TextChoices):
         "BUFFER_UNTIL",
         "BUFFER_UNTIL (Buffer values until signal is send)",
     )
-    BUFFER_COUNT  = (
-        "BUFFER_COUNT",
-        "BUFFER_COUNT (Butffer values until the count is reacht)"
-    )
+    BUFFER_COUNT = ("BUFFER_COUNT", "BUFFER_COUNT (Butffer values until the count is reacht)")
 
     # Delay
     DELAY = "DELAY", "DELAY (Delay the data)"
@@ -60,8 +57,8 @@ class ReactiveImplementationChoices(TextChoices):
 
     # Filter operations
     FILTER = "FILTER", "FILTER (Filter the data of a union)"
-    
-    #Roarder
+
+    # Roarder
     REORDER = "REORDER", "REORDER (Reorder the data)"
 
     GATE = "GATE", "GATE (Gate the data, first value is gated, second is gate)"
@@ -102,6 +99,7 @@ class GraphNodeKind(str, Enum):
     RETURNS = "RETURNS"
     REKUEST = "REKUEST_MAP"
     REKUEST_FILTER = "REKUEST_FILTER"
+    AGENT_SUBFLOW = "AGENT_SUBFLOW"
 
 
 @strawberry.enum
@@ -112,7 +110,7 @@ class ReactiveImplementation(str, Enum):
     ZIP = "ZIP"
     COMBINELATEST = "COMBINELATEST"
     WITHLATEST = "WITHLATEST"
-    
+
     # Buffer
     BUFFER_COMPLETE = "BUFFER_COMPLETE"
     BUFFER_UNTIL = "BUFFER_UNTIL"
@@ -153,7 +151,6 @@ class ReactiveImplementation(str, Enum):
 
     # Reorder
     REORDER = "REORDER"
-
 
     FOREACH = "FOREACH"
 
