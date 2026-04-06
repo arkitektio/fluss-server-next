@@ -64,10 +64,10 @@ class GraphNode:
     kind: enums.GraphNodeKind
     position: Position
     parent_node: str | None = None
-    ins: list[list[rtypes.Port]]  # Itmes that are streamed in
-    outs: list[list[rtypes.Port]]  # Items that are streamed out
-    constants: list[rtypes.Port]  # Items that are constants
-    voids: list[rtypes.Port]  # Items that are voids
+    ins: list[list[rtypes.ArgPort]]  # Itmes that are streamed in
+    outs: list[list[rtypes.ReturnPort]]  # Items that are streamed out
+    constants: list[rtypes.ArgPort]  # Items that are constants
+    voids: list[rtypes.ArgPort]  # Items that are voids
     constants_map: scalars.ValueMap
     globals_map: scalars.ValueMap
     description: str = "No description"
@@ -98,7 +98,6 @@ class RekuestActionNodeModel(BaseModel):
     hash: str
     map_strategy: str
     allow_local_execution: bool
-    binds: rmodels.BindsModel
     action_kind: str
 
 
@@ -107,7 +106,6 @@ class RekuestActionNode:
     hash: str
     map_strategy: str
     allow_local_execution: bool
-    binds: rtypes.Binds
     action_kind: renums.ActionKind
 
 
@@ -252,13 +250,13 @@ StreamEdgeModelUnion = Union[VanillaEdgeModel, LoggingEdgeModel]
 
 class GlobalArgModel(BaseModel):
     key: str
-    port: rmodels.PortModel
+    port: rmodels.ArgPortModel
 
 
 @pydantic.type(GlobalArgModel)
 class GlobalArg:
     key: str
-    port: rtypes.Port
+    port: rtypes.ArgPort
 
 
 class GraphModel(BaseModel):
@@ -329,19 +327,19 @@ class ReactiveTemplate:
     description: str | None = None
 
     @strawberry_django.field()
-    def ins(self, info) -> list[list[rtypes.Port]]:
-        return [[rmodels.PortModel(**i) for i in stream] for stream in self.ins]
+    def ins(self, info) -> list[list[rtypes.ArgPort]]:
+        return [[rmodels.ArgPortModel(**i) for i in stream] for stream in self.ins]
 
     @strawberry_django.field()
-    def outs(self, info) -> list[list[rtypes.Port]]:
-        return [[rmodels.PortModel(**i) for i in stream] for stream in self.outs]
+    def outs(self, info) -> list[list[rtypes.ReturnPort]]:
+        return [[rmodels.ReturnPortModel(**i) for i in stream] for stream in self.outs]
 
     @strawberry_django.field()
-    def constants(self, info) -> list[rtypes.Port]:
-        return [rmodels.PortModel(**i) for i in self.constants]
+    def constants(self, info) -> list[rtypes.ArgPort]:
+        return [rmodels.ArgPortModel(**i) for i in self.constants]
 
     @strawberry_django.field()
-    def voids(self, info) -> list[rtypes.Port]:
+    def voids(self, info) -> list[rtypes.ArgPort]:
         return []
 
 

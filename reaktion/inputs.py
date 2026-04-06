@@ -56,10 +56,10 @@ class GraphNodeInput:
     kind: enums.GraphNodeKind
     position: PositionInput
     parent_node: str | None = None
-    ins: list[list[ritypes.PortInput]] | None = None  # A set of streams
-    outs: list[list[ritypes.PortInput]] | None = None
-    constants: list[ritypes.PortInput] | None = None
-    voids: list[ritypes.PortInput] | None = None
+    ins: list[list[ritypes.ArgPortInput]] | None = None  # A set of streams
+    outs: list[list[ritypes.ReturnPortInput]] | None = None
+    constants: list[ritypes.ArgPortInput] | None = None
+    voids: list[ritypes.ArgPortInput] | None = None
     constants_map: scalars.ValueMap | None = None
     globals_map: scalars.ValueMap | None = None
     description: str | None = None
@@ -71,7 +71,6 @@ class GraphNodeInput:
     hash: str | None = None
     map_strategy: enums.MapStrategy | None = None
     allow_local_execution: bool | None = None
-    binds: ritypes.BindsInput | None = None
     parent_node: str | None = None
     implementation: enums.ReactiveImplementation | None = None
     # Placeholder for the node kind
@@ -124,13 +123,13 @@ class GraphEdgeInput:
 
 class GlobalArgInputModel(BaseModel):
     key: str
-    port: rimodels.PortInputModel
+    port: rimodels.ArgPortInputModel
 
 
 @pydantic.input(GlobalArgInputModel)
 class GlobalArgInput:
     key: str
-    port: ritypes.PortInput
+    port: ritypes.ArgPortInput
 
 
 class GraphInputModel(BaseModel):
@@ -149,9 +148,9 @@ class GraphInput:
 class ReactiveTemplateInputModel(BaseModel):
     title: str
     description: str
-    ins: list[list[rimodels.PortInputModel]]  # A set of streams
-    outs: list[list[rimodels.PortInputModel]]
-    constants: list[rimodels.PortInputModel]
+    ins: list[list[rimodels.ArgPortInputModel]]  # A set of streams
+    outs: list[list[rimodels.ReturnPortInputModel]]
+    constants: list[rimodels.ArgPortInputModel]
     implementation: enums.ReactiveImplementation
 
     class Config:
@@ -160,7 +159,12 @@ class ReactiveTemplateInputModel(BaseModel):
 
 @pydantic.input(ReactiveTemplateInputModel, all_fields=True)
 class ReactiveTemplateInput:
-    pass
+    title: str
+    description: str
+    ins: list[list[ritypes.ArgPortInput]]  # A set of streams
+    outs: list[list[ritypes.ReturnPortInput]]
+    constants: list[ritypes.ArgPortInput]
+    implementation: enums.ReactiveImplementation
 
 
 @strawberry.input
