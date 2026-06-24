@@ -4,7 +4,6 @@ from reaktion import types, models, inputs
 from reaktion.scoping import get_for_org
 import logging
 from reaktion.hashers import hash_graph
-import namegenerator
 
 logger = logging.getLogger(__name__)
 
@@ -27,13 +26,7 @@ def update_workspace(info: Info, input: UpdateWorkspaceInput) -> types.Workspace
     flow, _ = models.Flow.objects.get_or_create(
         workspace=workspace,
         hash=hash_graph(graph),
-        defaults=dict(
-            title=input.title or namegenerator.gen(),
-            description=input.description or "No description",
-            creator=info.context.request.user,
-            graph=graph,
-            organization=info.context.request.organization
-        ),
+        defaults=dict(title=input.title or "Untitled Workspace", description=input.description or "No description", creator=info.context.request.user, graph=graph, organization=info.context.request.organization),
     )
 
     if input.title:
@@ -55,13 +48,8 @@ class CreateWorkspaceInput:
 
 
 def create_workspace(info: Info, input: CreateWorkspaceInput) -> types.Workspace:
-    title = input.title or namegenerator.gen()
-    workspace = models.Workspace.objects.create(
-        title=title,
-        description=input.description,
-        creator=info.context.request.user,
-        organization=info.context.request.organization
-    )
+    title = input.title or "Untitled Workspace"
+    workspace = models.Workspace.objects.create(title=title, description=input.description, creator=info.context.request.user, organization=info.context.request.organization)
 
     nodes = [
         {
@@ -100,14 +88,6 @@ def create_workspace(info: Info, input: CreateWorkspaceInput) -> types.Workspace
         "globals": [],
     }
 
-    models.Flow.objects.create(
-        workspace=workspace,
-        graph=graph,
-        hash=hash_graph(graph),
-        title=title,
-        description=input.description,
-        creator=info.context.request.user,
-        organization=info.context.request.organization
-    )
+    models.Flow.objects.create(workspace=workspace, graph=graph, hash=hash_graph(graph), title=title, description=input.description, creator=info.context.request.user, organization=info.context.request.organization)
 
     return workspace

@@ -19,13 +19,12 @@ class Command(BaseCommand):
                 ins=create_n_empty_streams(2),
                 outs=create_n_empty_streams(1),
                 constants=[],
-                voids=[],
                 implementation=enums.ReactiveImplementation.ZIP,
             )
         ]
 
         for node in reactive_nodes:
-            serialized = node.dict()
+            serialized = node.model_dump()
             r, _ = ReactiveTemplate.objects.update_or_create(
                 title=node.title,
                 description=node.description,

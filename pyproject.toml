@@ -7,7 +7,7 @@ requires-python = ">=3.12,<4"
 readme = "README.md"
 dependencies = [
     "django>=6",
-    "omegaconf>=2.3.0,<3",
+    "pydantic-settings[yaml]>=2.2",
     "psycopg[binary]>=3.2",
     "daphne>=4.0.0,<5",
     "channels-redis>=4.1.0,<5",
@@ -19,13 +19,9 @@ dependencies = [
     "jsonpatch~=1.33",
     "django-probes>=1.7.0,<2",
     "rich>=14.0.0",
-    "koherent>=4",
+    "koherent>4",
     "django-redis>=5.4.0",
     "django-health-check>=3.20.0",
-    # namegenerator (used by reaktion's workspace mutations for auto-naming) has
-    # been delisted from PyPI; its sdist file URL still serves, so pin it directly
-    # (same artifact other arkitekt servers lock to).
-    "namegenerator @ https://files.pythonhosted.org/packages/1b/2b/dd6d5b718c8fcefd30b9844a6c2386983c78ea37fa6094aea67d2e694719/namegenerator-1.0.6.tar.gz",
     "pytest-django>=4.11.1",
     "pytest-asyncio>=1.1.0",
 ]

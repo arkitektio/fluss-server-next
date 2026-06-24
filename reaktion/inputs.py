@@ -1,5 +1,5 @@
 from strawberry.experimental import pydantic
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from rekuest_core.inputs import models as rimodels
 from rekuest_core.inputs import types as ritypes
 from rekuest_core import enums as renums
@@ -153,8 +153,7 @@ class ReactiveTemplateInputModel(BaseModel):
     constants: list[rimodels.ArgPortInputModel]
     implementation: enums.ReactiveImplementation
 
-    class Config:
-        use_enum_values = True
+    model_config = ConfigDict(use_enum_values=True)
 
 
 @pydantic.input(ReactiveTemplateInputModel, all_fields=True)
