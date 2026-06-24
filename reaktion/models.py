@@ -102,7 +102,7 @@ class ReactiveTemplate(models.Model):
 class Run(models.Model):
     flow = models.ForeignKey(Flow, on_delete=models.CASCADE, null=True, blank=True, related_name="runs")
 
-    assignation = models.CharField(null=True, blank=True, max_length=1000)
+    task_id = models.CharField(null=True, blank=True, max_length=1000)
     status = models.CharField(max_length=100, default="RUNNING")
     snapshot_interval = models.IntegerField(null=True, blank=True)
     pinned_by = models.ManyToManyField(
@@ -114,7 +114,7 @@ class Run(models.Model):
     created_at = models.DateTimeField(auto_created=True, auto_now_add=True)
 
     def __str__(self) -> str:
-        return f"{self.flow.workspace} - {self.assignation}"
+        return f"{self.flow.workspace} - {self.task_id}"
 
 
 class Snapshot(models.Model):

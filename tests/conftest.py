@@ -232,16 +232,16 @@ def make_run(authenticated_context, make_flow):
     from reaktion.models import Run
 
     @sync_to_async
-    def _make(flow, assignation=None):
+    def _make(flow, task_id=None):
         return Run.objects.create(
             flow=flow,
-            assignation=assignation or uuid.uuid4().hex,
+            task_id=task_id or uuid.uuid4().hex,
         )
 
-    async def _wrap(context=None, flow=None, assignation=None):
+    async def _wrap(context=None, flow=None, task_id=None):
         if flow is None:
             flow = await make_flow(context=context)
-        return await _make(flow, assignation)
+        return await _make(flow, task_id)
 
     return _wrap
 

@@ -189,7 +189,7 @@ class PortDemandInput:
 class CreateRunInputModel(BaseModel):
     flow: str
     snapshot_interval: int
-    assignation: str
+    task_id: str
 
 
 class CloseRunInputModel(BaseModel):
@@ -203,7 +203,7 @@ class CloseRunInput:
 
 @pydantic.input(CreateRunInputModel)
 class CreateRunInput:
-    assignation: strawberry.ID
+    task_id: strawberry.ID
     flow: strawberry.ID
     snapshot_interval: int
 

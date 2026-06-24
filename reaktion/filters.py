@@ -1,96 +1,108 @@
+"""GraphQL filter types for reaktion.
+
+Mirrors mikro's approach: small, prefix-aware filter-field mixins composed into
+one ``kante.filter_type`` per model. Prefix awareness lets a filter compose
+correctly when nested inside another filter (the ``prefix`` carries the
+relation path).
+"""
+
+import datetime
+
+import kante
 import strawberry
-from reaktion import models, enums
-from typing import Optional
-from strawberry_django.filters import FilterLookup
-import strawberry_django
+from django.db.models import Q
+from kante.types import Info
+
+from reaktion import enums, models
+
+
+# --- reusable mixins ---------------------------------------------------------
 
 
 @strawberry.input
-class SearchFilter:
-    search: Optional[str] | None
-
-    def filter_search(self, queryset, info):
-        if self.search is None:
-            return queryset
-        return queryset.filter(name__icontains=self.search)
+class IdsFilterMixin:
+    @kante.filter_field(description="Filter by a list of IDs")
+    def ids(self, info: Info, value: list[strawberry.ID], prefix: str) -> Q:
+        return Q(**{f"{prefix}id__in": value})
 
 
-@strawberry_django.filter(models.Workspace)
-class WorkspaceFilter:
-    ids: list[strawberry.ID] | None
-    search: str | None
-
-    def filter_ids(self, queryset, info):
-        if self.ids is None:
-            return queryset
-        return queryset.filter(id__in=self.ids)
-
-    def filter_search(self, queryset, info):
-        if self.search is None:
-            return queryset
-        return queryset.filter(name__icontains=self.search)
+@strawberry.input
+class TitleSearchFilterMixin:
+    @kante.filter_field(description="Search by title (case-insensitive substring)")
+    def search(self, info: Info, value: str, prefix: str) -> Q:
+        return Q(**{f"{prefix}title__icontains": value})
 
 
-@strawberry_django.order(models.Workspace)
-class WorkspaceOrder:
-    created_at: strawberry.auto
+@strawberry.input
+class CreatedAtFilterMixin:
+    @kante.filter_field(description="Filter for items created before this datetime")
+    def created_before(self, info: Info, value: datetime.datetime, prefix: str) -> Q:
+        return Q(**{f"{prefix}created_at__lt": value})
+
+    @kante.filter_field(description="Filter for items created after this datetime")
+    def created_after(self, info: Info, value: datetime.datetime, prefix: str) -> Q:
+        return Q(**{f"{prefix}created_at__gt": value})
 
 
-@strawberry_django.order(models.Run)
-class RunOrder:
-    created_at: strawberry.auto
+@strawberry.input
+class PinnedFilterMixin:
+    @kante.filter_field(description="Filter by whether the current user has pinned the item")
+    def pinned(self, info: Info, value: bool, prefix: str) -> Q:
+        user = info.context.request.user
+        if value:
+            return Q(**{f"{prefix}pinned_by": user})
+        return ~Q(**{f"{prefix}pinned_by": user})
 
 
-@strawberry_django.filter(models.Run)
-class RunFilter:
-    ids: list[strawberry.ID] | None
-    search: str | None
-
-    def filter_ids(self, queryset, info):
-        if self.ids is None:
-            return queryset
-        return queryset.filter(id__in=self.ids)
-
-    def filter_search(self, queryset, info):
-        if self.search is None:
-            return queryset
-        return queryset.filter(flow__name__icontains=self.search)
+# --- per-model filter types --------------------------------------------------
 
 
-@strawberry_django.filter(models.Flow)
-class FlowFilter:
-    workspace: WorkspaceFilter | None
-    ids: list[strawberry.ID] | None
-    search: str | None
-
-    def filter_ids(self, queryset, info):
-        if self.ids is None:
-            return queryset
-        return queryset.filter(id__in=self.ids)
-
-    def filter_search(self, queryset, info):
-        if self.search is None:
-            return queryset
-        return queryset.filter(name__icontains=self.search)
+@kante.filter_type(models.Workspace)
+class WorkspaceFilter(IdsFilterMixin, TitleSearchFilterMixin, CreatedAtFilterMixin, PinnedFilterMixin):
+    pass
 
 
-@strawberry_django.filter(models.ReactiveTemplate)
-class ReactiveTemplateFilter:
-    ids: list[strawberry.ID] | None
-    implementations: list[enums.ReactiveImplementation] | None
-    search: str | None
+@kante.filter_type(models.Flow)
+class FlowFilter(IdsFilterMixin, TitleSearchFilterMixin, CreatedAtFilterMixin, PinnedFilterMixin):
+    pass
 
-    def filter_ids(self, queryset, info):
-        if self.ids is None:
-            return queryset
-        return queryset.filter(id__in=self.ids)
 
-    def filter_implementations(self, queryset, info):
-        if self.implementations is None:
-            return queryset
-        return queryset.filter(implementation__in=self.implementations)
+@kante.filter_type(models.ReactiveTemplate)
+class ReactiveTemplateFilter(IdsFilterMixin, TitleSearchFilterMixin):
+    @kante.filter_field(description="Filter by reactive implementation")
+    def implementations(self, info: Info, value: list[enums.ReactiveImplementation], prefix: str) -> Q:
+        return Q(**{f"{prefix}implementation__in": value})
 
-    def filter_search(self, queryset, info):
-        if self.search is None:
-            return queryset
-        return queryset.filter(name__icontains=self.search)
+
+@kante.filter_type(models.Run)
+class RunFilter(IdsFilterMixin, CreatedAtFilterMixin, PinnedFilterMixin):
+    @kante.filter_field(description="Search by task id (case-insensitive substring)")
+    def search(self, info: Info, value: str, prefix: str) -> Q:
+        return Q(**{f"{prefix}task_id__icontains": value})
+
+
+@kante.filter_type(models.Snapshot)
+class SnapshotFilter(IdsFilterMixin, CreatedAtFilterMixin):
+    pass
+
+
+@kante.filter_type(models.RunEvent)
+class RunEventFilter(IdsFilterMixin, CreatedAtFilterMixin):
+    @kante.filter_field(description="Filter by event kind")
+    def kinds(self, info: Info, value: list[enums.RunEventKind], prefix: str) -> Q:
+        return Q(**{f"{prefix}kind__in": value})
+
+
+@kante.filter_type(models.Trace)
+class TraceFilter(IdsFilterMixin, PinnedFilterMixin):
+    pass
+
+
+@kante.filter_type(models.TraceSnapshot)
+class TraceSnapshotFilter(IdsFilterMixin, CreatedAtFilterMixin):
+    pass
+
+
+@kante.filter_type(models.TraceEvent)
+class TraceEventFilter(IdsFilterMixin, CreatedAtFilterMixin):
+    pass

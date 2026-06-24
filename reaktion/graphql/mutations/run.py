@@ -13,7 +13,7 @@ def create_run(info: Info, input: inputs.CreateRunInput) -> types.Run:
     flow = get_for_org(models.Flow, info, id=input.flow)
     run, created = models.Run.objects.update_or_create(
         flow=flow,
-        assignation=input.assignation,
+        task_id=input.task_id,
         defaults=dict(
             snapshot_interval=input.snapshot_interval,
             status=enums.RunStatus.RUNNING.value,

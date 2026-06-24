@@ -13,7 +13,7 @@ pytestmark = [pytest.mark.django_db(transaction=True), pytest.mark.asyncio]
 
 CREATE_RUN = """
 mutation ($input: CreateRunInput!) {
-  createRun(input: $input) { id status assignation }
+  createRun(input: $input) { id status taskId }
 }
 """
 
@@ -49,21 +49,21 @@ mutation ($input: DeleteSnapshotInput!) {
 
 RUN_QUERY = """
 query ($id: ID!) {
-  run(id: $id) { id status assignation }
+  run(id: $id) { id status taskId }
 }
 """
 
-RUN_FOR_ASSIGNATION = """
+RUN_FOR_TASK = """
 query ($id: ID!) {
-  runForAssignation(id: $id) { id assignation }
+  runForTask(id: $id) { id taskId }
 }
 """
 
 
-async def _create_run(aexecute, flow, assignation="assignation-1"):
+async def _create_run(aexecute, flow, task_id="task-1"):
     res = await aexecute(
         CREATE_RUN,
-        {"input": {"flow": str(flow.id), "assignation": assignation, "snapshotInterval": 5}},
+        {"input": {"flow": str(flow.id), "taskId": task_id, "snapshotInterval": 5}},
     )
     assert not res.errors, res.errors
     return res.data["createRun"]
@@ -73,7 +73,7 @@ async def test_create_run(aexecute, make_flow):
     flow = await make_flow()
     run = await _create_run(aexecute, flow)
     assert run["status"] == "RUNNING"
-    assert run["assignation"] == "assignation-1"
+    assert run["taskId"] == "task-1"
     assert await Run.objects.filter(id=run["id"]).aexists()
 
 
@@ -133,7 +133,7 @@ async def test_delete_run(aexecute, make_flow):
 
 async def test_full_lifecycle(aexecute, make_flow):
     flow = await make_flow()
-    run = await _create_run(aexecute, flow, assignation="lifecycle")
+    run = await _create_run(aexecute, flow, task_id="lifecycle")
 
     track = await aexecute(
         TRACK,
@@ -161,12 +161,12 @@ async def test_full_lifecycle(aexecute, make_flow):
 
 async def test_run_queries(aexecute, make_flow):
     flow = await make_flow()
-    run = await _create_run(aexecute, flow, assignation="queryable")
+    run = await _create_run(aexecute, flow, task_id="queryable")
 
     by_id = await aexecute(RUN_QUERY, {"id": run["id"]})
     assert not by_id.errors, by_id.errors
     assert by_id.data["run"]["id"] == run["id"]
 
-    by_assignation = await aexecute(RUN_FOR_ASSIGNATION, {"id": "queryable"})
-    assert not by_assignation.errors, by_assignation.errors
-    assert by_assignation.data["runForAssignation"]["id"] == run["id"]
+    by_task = await aexecute(RUN_FOR_TASK, {"id": "queryable"})
+    assert not by_task.errors, by_task.errors
+    assert by_task.data["runForTask"]["id"] == run["id"]
