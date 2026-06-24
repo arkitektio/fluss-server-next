@@ -10,7 +10,9 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [ "3.12"]
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        # The suite brings up a Postgres backend via docker compose
+        # (tests/integration/docker-compose.yaml), available only on Linux runners.
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4

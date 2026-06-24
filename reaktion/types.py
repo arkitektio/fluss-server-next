@@ -12,11 +12,11 @@ from rekuest_core.objects import types as rtypes
 from rekuest_core.objects import models as rmodels
 from rekuest_core import enums as renums
 from strawberry import LazyType
+from kante.types import Info
 from .type_gen import create_stats_type
 
 
 def build_prescoped_queryset(info, queryset, field="organization"):
-    print(info)
     if info.variable_values.get("filters", {}).get("scope") is None:
         queryset = queryset.filter(**{field: info.context.request.organization})
         return queryset
@@ -283,10 +283,12 @@ class Flow:
     workspace: "Workspace"
     hash: str
 
-    @strawberry_django.field()
-    def graph(self, info) -> Graph:
-        print(GraphModel(**self.graph))
+    @classmethod
+    def get_queryset(cls, queryset, info, **kwargs):
+        return build_prescoped_queryset(info, queryset)
 
+    @strawberry_django.field()
+    def graph(self, info: Info) -> Graph:
         return GraphModel(**self.graph)
 
 
@@ -303,8 +305,12 @@ class Workspace:
     created_at: datetime.datetime
     flows: list["Flow"]
 
+    @classmethod
+    def get_queryset(cls, queryset, info, **kwargs):
+        return build_prescoped_queryset(info, queryset)
+
     @strawberry_django.field()
-    def latest_flow(self, info) -> Optional[Flow]:
+    def latest_flow(self, info: Info) -> Optional[Flow]:
         return self.flows.order_by("-created_at").first()
 
 
@@ -327,19 +333,19 @@ class ReactiveTemplate:
     description: str | None = None
 
     @strawberry_django.field()
-    def ins(self, info) -> list[list[rtypes.ArgPort]]:
+    def ins(self, info: Info) -> list[list[rtypes.ArgPort]]:
         return [[rmodels.ArgPortModel(**i) for i in stream] for stream in self.ins]
 
     @strawberry_django.field()
-    def outs(self, info) -> list[list[rtypes.ReturnPort]]:
+    def outs(self, info: Info) -> list[list[rtypes.ReturnPort]]:
         return [[rmodels.ReturnPortModel(**i) for i in stream] for stream in self.outs]
 
     @strawberry_django.field()
-    def constants(self, info) -> list[rtypes.ArgPort]:
+    def constants(self, info: Info) -> list[rtypes.ArgPort]:
         return [rmodels.ArgPortModel(**i) for i in self.constants]
 
     @strawberry_django.field()
-    def voids(self, info) -> list[rtypes.ArgPort]:
+    def voids(self, info: Info) -> list[rtypes.ArgPort]:
         return []
 
 
@@ -353,8 +359,12 @@ class Run:
     snapshots: list["Snapshot"]
     status: enums.RunStatus
 
+    @classmethod
+    def get_queryset(cls, queryset, info, **kwargs):
+        return build_prescoped_queryset(info, queryset, field="flow__organization")
+
     @strawberry_django.field()
-    def latest_snapshot(self, info) -> Optional["Snapshot"]:
+    def latest_snapshot(self, info: Info) -> Optional["Snapshot"]:
         return self.snapshots.order_by("-created_at").first()
 
 
@@ -366,6 +376,10 @@ class Snapshot:
     id: strawberry.ID
     status: str | None = None
     created_at: datetime.datetime
+
+    @classmethod
+    def get_queryset(cls, queryset, info, **kwargs):
+        return build_prescoped_queryset(info, queryset, field="run__flow__organization")
 
 
 @strawberry_django.type(models.RunEvent, pagination=True)
@@ -379,6 +393,10 @@ class RunEvent:
     handle: str
     source: str
     created_at: datetime.datetime
+
+    @classmethod
+    def get_queryset(cls, queryset, info, **kwargs):
+        return build_prescoped_queryset(info, queryset, field="run__flow__organization")
 
 
 @strawberry_django.type(models.Trace, pagination=True)

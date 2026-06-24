@@ -7,8 +7,12 @@ from reaktion.graphql import queries
 import strawberry_django
 from koherent.strawberry.extension import KoherentExtension
 from authentikate.strawberry.extension import AuthentikateExtension
+from strawberry.schema.config import StrawberryConfig
+from kante.types import Info
 from typing import List
 from rekuest_core.constants import interface_types
+from rekuest_core.scalars import scalar_map as rekuest_scalar_map
+from reaktion.scoping import get_for_org
 
 
 @strawberry.type
@@ -28,22 +32,20 @@ class Query:
     workspace_stats: types.WorkspaceStats = strawberry.field(resolver=types.WorkspaceStatsResolver)
 
     @strawberry_django.field
-    def run(self, id: strawberry.ID) -> types.Run:
-        return models.Run.objects.get(id=id)
+    def run(self, info: Info, id: strawberry.ID) -> types.Run:
+        return models.Run.objects.get(id=id, flow__organization=info.context.request.organization)
 
     @strawberry_django.field
-    def run_for_assignation(self, id: strawberry.ID) -> types.Run:
-        return models.Run.objects.get(assignation=id)
+    def run_for_assignation(self, info: Info, id: strawberry.ID) -> types.Run:
+        return models.Run.objects.get(assignation=id, flow__organization=info.context.request.organization)
 
     @strawberry_django.field
-    def flow(self, id: strawberry.ID) -> types.Flow:
-        print("self")
-        return models.Flow.objects.get(id=id)
+    def flow(self, info: Info, id: strawberry.ID) -> types.Flow:
+        return get_for_org(models.Flow, info, id=id)
 
     @strawberry_django.field
-    def snapshot(self, id: strawberry.ID) -> types.Snapshot:
-        print("self")
-        return models.Snapshot.objects.get(id=id)
+    def snapshot(self, info: Info, id: strawberry.ID) -> types.Snapshot:
+        return models.Snapshot.objects.get(id=id, run__flow__organization=info.context.request.organization)
 
 
 @strawberry.type
@@ -74,6 +76,7 @@ schema = strawberry.Schema(
     mutation=Mutation,
     subscription=Subscription,
     extensions=[DjangoOptimizerExtension, KoherentExtension, AuthentikateExtension],
+    config=StrawberryConfig(scalar_map=rekuest_scalar_map),
     types=[
         types.RekuestFilterActionNode,
         types.RekuestMapActionNode,

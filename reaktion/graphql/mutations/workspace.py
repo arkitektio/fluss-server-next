@@ -1,6 +1,7 @@
 from kante.types import Info
 import strawberry
 from reaktion import types, models, inputs
+from reaktion.scoping import get_for_org
 import logging
 from reaktion.hashers import hash_graph
 import namegenerator
@@ -17,10 +18,14 @@ class UpdateWorkspaceInput:
 
 
 def update_workspace(info: Info, input: UpdateWorkspaceInput) -> types.Workspace:
+    # Scope to the request's organization: only own workspaces can be updated
+    # (raises DoesNotExist for a cross-org / unknown workspace).
+    workspace = get_for_org(models.Workspace, info, id=input.workspace)
+
     graph = strawberry.asdict(input.graph)
 
     flow, _ = models.Flow.objects.get_or_create(
-        workspace_id=input.workspace,
+        workspace=workspace,
         hash=hash_graph(graph),
         defaults=dict(
             title=input.title or namegenerator.gen(),
@@ -38,7 +43,7 @@ def update_workspace(info: Info, input: UpdateWorkspaceInput) -> types.Workspace
 
     flow.save()
 
-    return models.Workspace.objects.get(id=input.workspace)
+    return workspace
 
 
 @strawberry.input
