@@ -1,5 +1,5 @@
 from strawberry.experimental import pydantic
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from rekuest_core.inputs import models as rimodels
 from rekuest_core.inputs import types as ritypes
 from rekuest_core import enums as renums
@@ -25,9 +25,9 @@ class GraphNodeInputModel(BaseModel):
     kind: enums.GraphNodeKind
     position: PositionInput
     parent_node: str | None = None
-    ins: list[list[rimodels.PortInputModel]]  # A set of streams
-    outs: list[list[rimodels.PortInputModel]]
-    constants: list[rimodels.PortInputModel]
+    ins: list[list[rimodels.PortInputModel]] | None = None  # A set of streams
+    outs: list[list[rimodels.PortInputModel]] | None = None
+    constants: list[rimodels.PortInputModel] | None = None
     voids: list[rimodels.PortInputModel]
     constants_map: Dict[str, Any]
     globals_map: Dict[str, Any]
@@ -42,6 +42,12 @@ class GraphNodeInputModel(BaseModel):
     allow_local_execution: bool | None = None
     binds: rimodels.BindsInputModel | None = None
     implementation: enums.ReactiveImplementation | None = None
+    app_filter: str | None = None
+    version_filter: str | None = None
+    device_filter: str | None = None
+    user_filter: str | None = None
+    instance_filter: str | None = None
+    auto_resolvable: bool = False
 
 
 @pydantic.input(GraphNodeInputModel)
@@ -50,12 +56,12 @@ class GraphNodeInput:
     kind: enums.GraphNodeKind
     position: PositionInput
     parent_node: str | None = None
-    ins: list[list[ritypes.PortInput]]  # A set of streams
-    outs: list[list[ritypes.PortInput]]
-    constants: list[ritypes.PortInput]
-    voids: list[ritypes.PortInput]
-    constants_map: scalars.ValueMap
-    globals_map: scalars.ValueMap
+    ins: list[list[ritypes.ArgPortInput]] | None = None  # A set of streams
+    outs: list[list[ritypes.ReturnPortInput]] | None = None
+    constants: list[ritypes.ArgPortInput] | None = None
+    voids: list[ritypes.ArgPortInput] | None = None
+    constants_map: scalars.ValueMap | None = None
+    globals_map: scalars.ValueMap | None = None
     description: str | None = None
     title: str | None = None
     retries: int | None = None
@@ -65,12 +71,20 @@ class GraphNodeInput:
     hash: str | None = None
     map_strategy: enums.MapStrategy | None = None
     allow_local_execution: bool | None = None
-    binds: ritypes.BindsInput | None = None
     parent_node: str | None = None
     implementation: enums.ReactiveImplementation | None = None
     # Placeholder for the node kind
     hello: str | None = None
     path: str | None = None
+    app_filter: str | None = None
+    version_filter: str | None = None
+    device_filter: str | None = None
+    user_filter: str | None = None
+    instance_filter: str | None = None
+    auto_resolvable: bool = strawberry.field(
+        default=False,
+        description="Whether this dependency is auto resolvable or not. If so we will try to automatically resolve it based on the demands specified in the dependency and the capabilities of the available agents in the system. This is used to identify the demand in the system. Attention if any of the dependencies of this agent dependency is not auto resolvable, this dependency will also not be auto resolvable",
+    )
 
 
 class StreamItemInputModel(BaseModel):
@@ -109,13 +123,13 @@ class GraphEdgeInput:
 
 class GlobalArgInputModel(BaseModel):
     key: str
-    port: rimodels.PortInputModel
+    port: rimodels.ArgPortInputModel
 
 
 @pydantic.input(GlobalArgInputModel)
 class GlobalArgInput:
     key: str
-    port: ritypes.PortInput
+    port: ritypes.ArgPortInput
 
 
 class GraphInputModel(BaseModel):
@@ -134,18 +148,22 @@ class GraphInput:
 class ReactiveTemplateInputModel(BaseModel):
     title: str
     description: str
-    ins: list[list[rimodels.PortInputModel]]  # A set of streams
-    outs: list[list[rimodels.PortInputModel]]
-    constants: list[rimodels.PortInputModel]
+    ins: list[list[rimodels.ArgPortInputModel]]  # A set of streams
+    outs: list[list[rimodels.ReturnPortInputModel]]
+    constants: list[rimodels.ArgPortInputModel]
     implementation: enums.ReactiveImplementation
 
-    class Config:
-        use_enum_values = True
+    model_config = ConfigDict(use_enum_values=True)
 
 
 @pydantic.input(ReactiveTemplateInputModel, all_fields=True)
 class ReactiveTemplateInput:
-    pass
+    title: str
+    description: str
+    ins: list[list[ritypes.ArgPortInput]]  # A set of streams
+    outs: list[list[ritypes.ReturnPortInput]]
+    constants: list[ritypes.ArgPortInput]
+    implementation: enums.ReactiveImplementation
 
 
 @strawberry.input
@@ -170,7 +188,7 @@ class PortDemandInput:
 class CreateRunInputModel(BaseModel):
     flow: str
     snapshot_interval: int
-    assignation: str
+    task_id: str
 
 
 class CloseRunInputModel(BaseModel):
@@ -184,7 +202,7 @@ class CloseRunInput:
 
 @pydantic.input(CreateRunInputModel)
 class CreateRunInput:
-    assignation: strawberry.ID
+    task_id: strawberry.ID
     flow: strawberry.ID
     snapshot_interval: int
 

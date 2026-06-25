@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib.auth import get_user_model
 from authentikate.models import Organization, User
+
 # Create your models here.
 from django.db import models
 
@@ -20,9 +21,7 @@ class Workspace(models.Model):
     )
     title = models.CharField(max_length=10000, null=True)
     description = models.CharField(max_length=10000, null=True)
-    creator = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE, null=True, blank=True
-    )
+    creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, blank=True)
     organization = models.ForeignKey(
         Organization,
         on_delete=models.CASCADE,
@@ -40,15 +39,9 @@ class Workspace(models.Model):
 
 
 class Flow(models.Model):
-    workspace = models.ForeignKey(
-        Workspace, on_delete=models.CASCADE, null=True, blank=True, related_name="flows"
-    )
-    creator = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE, null=True, blank=True
-    )
-    restrict = models.JSONField(
-        default=list, help_text="Restrict access to specific nodes for this diagram"
-    )
+    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, null=True, blank=True, related_name="flows")
+    creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, blank=True)
+    restrict = models.JSONField(default=list, help_text="Restrict access to specific nodes for this diagram")
     organization = models.ForeignKey(
         Organization,
         on_delete=models.CASCADE,
@@ -60,9 +53,7 @@ class Flow(models.Model):
     edges = models.JSONField(null=True, blank=True, default=list)
     graph = models.JSONField(null=True, blank=True)
     hash = models.CharField(max_length=4000, default=uuid.uuid4)
-    description = models.CharField(
-        max_length=50000, default="Add a Desssscription", blank=True, null=True
-    )
+    description = models.CharField(max_length=50000, default="Add a Desssscription", blank=True, null=True)
     brittle = models.BooleanField(
         default=False,
         help_text="Is this a brittle flow? aka. should the flow fail on any exception?",
@@ -109,11 +100,9 @@ class ReactiveTemplate(models.Model):
 
 # Montoring Classes
 class Run(models.Model):
-    flow = models.ForeignKey(
-        Flow, on_delete=models.CASCADE, null=True, blank=True, related_name="runs"
-    )
+    flow = models.ForeignKey(Flow, on_delete=models.CASCADE, null=True, blank=True, related_name="runs")
 
-    assignation = models.CharField(null=True, blank=True, max_length=1000)
+    task_id = models.CharField(null=True, blank=True, max_length=1000)
     status = models.CharField(max_length=100, default="RUNNING")
     snapshot_interval = models.IntegerField(null=True, blank=True)
     pinned_by = models.ManyToManyField(
@@ -125,13 +114,11 @@ class Run(models.Model):
     created_at = models.DateTimeField(auto_created=True, auto_now_add=True)
 
     def __str__(self) -> str:
-        return f"{self.flow.workspace.name} - {self.assignation}"
+        return f"{self.flow.workspace} - {self.task_id}"
 
 
 class Snapshot(models.Model):
-    run = models.ForeignKey(
-        Run, on_delete=models.CASCADE, null=True, blank=True, related_name="snapshots"
-    )
+    run = models.ForeignKey(Run, on_delete=models.CASCADE, null=True, blank=True, related_name="snapshots")
     t = models.IntegerField()
     status = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(auto_created=True, auto_now_add=True)
@@ -139,9 +126,7 @@ class Snapshot(models.Model):
 
 class RunEvent(models.Model):
     reference = models.CharField(max_length=1000, null=True, blank=True)
-    run = models.ForeignKey(
-        Run, on_delete=models.CASCADE, null=True, blank=True, related_name="events"
-    )
+    run = models.ForeignKey(Run, on_delete=models.CASCADE, null=True, blank=True, related_name="events")
     snapshot = models.ManyToManyField(Snapshot, related_name="events")
     kind = TextChoicesField(
         max_length=1000,
@@ -162,9 +147,7 @@ class RunEvent(models.Model):
 
 
 class Trace(models.Model):
-    flow = models.ForeignKey(
-        Flow, on_delete=models.CASCADE, null=True, blank=True, related_name="traces"
-    )
+    flow = models.ForeignKey(Flow, on_delete=models.CASCADE, null=True, blank=True, related_name="traces")
     provision = models.JSONField(null=True, blank=True, max_length=1000)
     snapshot_interval = models.IntegerField(null=True, blank=True)
     pinned_by = models.ManyToManyField(
@@ -179,17 +162,13 @@ class Trace(models.Model):
 
 
 class TraceSnapshot(models.Model):
-    trace = models.ForeignKey(
-        Trace, on_delete=models.CASCADE, null=True, blank=True, related_name="snapshots"
-    )
+    trace = models.ForeignKey(Trace, on_delete=models.CASCADE, null=True, blank=True, related_name="snapshots")
     status = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(auto_created=True, auto_now_add=True)
 
 
 class TraceEvent(models.Model):
-    trace = models.ForeignKey(
-        Trace, on_delete=models.CASCADE, null=True, blank=True, related_name="events"
-    )
+    trace = models.ForeignKey(Trace, on_delete=models.CASCADE, null=True, blank=True, related_name="events")
     snapshot = models.ManyToManyField(TraceSnapshot, related_name="events")
     source = models.CharField(max_length=1000)
     value = models.CharField(max_length=1000, blank=True)

@@ -1,5 +1,4 @@
 from kante.types import Info
-import strawberry_django
 import strawberry
 from reaktion import types, models, scalars, channel_signals, channels
 from typing import AsyncGenerator
@@ -17,5 +16,4 @@ async def events(
 
 
     async for message in channels.run_event_channel.listen(info.context, [f"run_{run.id}"]):
-        print("message", message)
         yield await models.RunEvent.objects.aget(id=message.event)

@@ -10,20 +10,19 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-import os
 from pathlib import Path
 
-from omegaconf import OmegaConf
+from .configuration import Settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-conf = OmegaConf.load(os.path.join(BASE_DIR, "config.yaml"))
+conf = Settings()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = conf.django.get("secret_key", "changeme")  # TODO: Change this in production
+SECRET_KEY = conf.django.secret_key  # TODO: Change this in production
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -87,7 +86,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "fluss_server.urls"
-MY_SCRIPT_NAME = conf.get("force_script_name", "")
+MY_SCRIPT_NAME = conf.django.force_script_name
 
 TEMPLATES = [
     {
@@ -119,12 +118,12 @@ ASGI_APPLICATION = "fluss_server.asgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": conf.db.engine,
-        "NAME": conf.db.db_name,
-        "USER": conf.db.username,
-        "PASSWORD": conf.db.password,
-        "HOST": conf.db.host,
-        "PORT": conf.db.port,
+        "ENGINE": conf.postgres.engine,
+        "NAME": conf.postgres.db_name,
+        "USER": conf.postgres.username,
+        "PASSWORD": conf.postgres.password,
+        "HOST": conf.postgres.host,
+        "PORT": conf.postgres.port,
     }
 }
 
@@ -151,16 +150,7 @@ STRAWBERRY_DJANGO = {
 }
 
 
-AUTHENTIKATE = {
-    "ISSUERS": [
-        {
-            "iss": "lok",
-            "kind": "rsa",
-            "public_key": conf.lok.get("public_key", None),
-        }
-    ],
-    "STATIC_TOKENS": conf.lok.get("static_tokens", {}),
-}
+AUTHENTIKATE = conf.authentikate.model_dump()
 
 
 # Internationalization
@@ -175,7 +165,7 @@ CACHES = {
     }
 }
 
-CSRF_TRUSTED_ORIGINS = conf.get("csrf_trusted_origins", ["http://localhost", "https://localhost"])
+CSRF_TRUSTED_ORIGINS = conf.django.csrf_trusted_origins
 
 CACHE_TTL_DEFAULT = 60 * 15
 
