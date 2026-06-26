@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v1.0.0-rc.4 (2026-06-26)
+
+### Features
+
+- Removal of stale migrations
+  ([`b411c1e`](https://github.com/arkitektio/fluss-server-next/commit/b411c1e9891fec219f386e2f06dfc97f9d942198))
+
+
 ## v1.0.0-rc.3 (2026-06-26)
 
 
