@@ -1,12 +1,20 @@
 # CHANGELOG
 
 
+## v1.0.0-rc.3 (2026-06-26)
+
+
 ## v1.0.0-rc.2 (2026-06-26)
 
 ### Bug Fixes
 
 - With CONFIG.md
   ([`266ca87`](https://github.com/arkitektio/fluss-server-next/commit/266ca87d4180551a1d8aca4869c9483f2cd8c770))
+
+### Features
+
+- With white noise and optimized Dockerfile
+  ([`21bad34`](https://github.com/arkitektio/fluss-server-next/commit/21bad34adbd0c7402b69cdbc41fb33c9600c7944))
 
 
 ## v1.0.0-rc.1 (2026-06-25)
