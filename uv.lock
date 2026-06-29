@@ -745,7 +745,7 @@ wheels = [
 
 [[package]]
 name = "fluss-server"
-version = "1.0.0rc4"
+version = "1.0.0rc5"
 source = { virtual = "." }
 dependencies = [
     { name = "aioredis" },
