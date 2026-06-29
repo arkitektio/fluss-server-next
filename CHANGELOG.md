@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v1.0.0-rc.5 (2026-06-29)
+
+### Bug Fixes
+
+- Authentikate update
+  ([`d4f03df`](https://github.com/arkitektio/fluss-server-next/commit/d4f03df6b53563bbd876757ce6ed1f0fc67ffc9e))
+
+
 ## v1.0.0-rc.4 (2026-06-26)
 
 ### Features
