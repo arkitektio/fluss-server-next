@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v1.0.0-rc.6 (2026-06-29)
+
+### Bug Fixes
+
+- Uv lock
+  ([`49035b4`](https://github.com/arkitektio/fluss-server-next/commit/49035b43601020473f41c8c55eafa478be0cebcd))
+
+
 ## v1.0.0-rc.5 (2026-06-29)
 
 ### Bug Fixes
