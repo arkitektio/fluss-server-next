@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v1.0.0-rc.7 (2026-06-30)
+
+### Bug Fixes
+
+- New models
+  ([`6586cc9`](https://github.com/arkitektio/fluss-server-next/commit/6586cc96f9712f009182002bb3d0f1d075c87917))
+
+
 ## v1.0.0-rc.6 (2026-06-29)
 
 ### Bug Fixes
