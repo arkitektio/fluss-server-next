@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v1.0.0-rc.8 (2026-07-02)
+
+### Bug Fixes
+
+- To new api
+  ([`038a267`](https://github.com/arkitektio/fluss-server-next/commit/038a267840a5c44f3b6d9b5d926c411ca02a8d8c))
+
+
 ## v1.0.0-rc.7 (2026-06-30)
 
 ### Bug Fixes
