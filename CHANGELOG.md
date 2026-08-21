@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v1.0.0-rc.9 (2026-08-20)
+
+### Bug Fixes
+
+- Authentikate
+  ([`e6f1c93`](https://github.com/arkitektio/fluss-server-next/commit/e6f1c93fce23b55d65e2b46d8be45345ac20fede))
+
+
 ## v1.0.0-rc.8 (2026-07-02)
 
 ### Bug Fixes
