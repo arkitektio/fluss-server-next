@@ -42,6 +42,7 @@ class ReactiveImplementationChoices(TextChoices):
     SPLIT = "SPLIT", "SPLIT (Split the data)"
     OMIT = "OMIT", "OMIT (Omit the data)"
     ENSURE = "ENSURE", "ENSURE (Ensure the data (discards None in the stream))"
+    SELECT = "SELECT", "SELECT (Select a key from the data)"
 
     # Basic Operations
     ADD = "ADD", "ADD (Add a number to the data)"
@@ -50,6 +51,7 @@ class ReactiveImplementationChoices(TextChoices):
     DIVIDE = "DIVIDE", "DIVIDE (Divide the data with a number)"
     MODULO = "MODULO", "MODULO (Modulo the data with a number)"
     POWER = "POWER", "POWER (Power the data with a number)"
+    JUST = "JUST", "JUST (Emit a constant value)"
 
     # String Operations
     PREFIX = "PREFIX", "PREFIX (Prefix the data with a string)"
