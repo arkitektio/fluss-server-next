@@ -1,9 +1,15 @@
 # CHANGELOG
 
 
+## v1.0.0-rc.12 (2026-09-02)
+
+
 ## v1.0.0-rc.11 (2026-09-02)
 
 ### Features
+
+- Rkuest next update
+  ([`39149cd`](https://github.com/arkitektio/fluss-server-next/commit/39149cdee4f312f1e01abea564ee1951d7e209f0))
 
 - Sync rekuest_core (blok UtilCall for effects, validators and widgets) and fix reactive enum drift
   ([`395e6e2`](https://github.com/arkitektio/fluss-server-next/commit/395e6e29cc64707256bf559e299323c328d2fa67))
@@ -23,12 +29,6 @@ BREAKING CHANGE: `ValidatorFunction` scalar removed; `Effect.function`/`Validato
 Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
 
 Claude-Session: https://claude.ai/code/session_019je4cqXZZqsfXcF5AySTtY
-
-### Breaking Changes
-
-- `validatorfunction` scalar removed; `Effect.function`/`Validator.function` are `call: UtilCall!`;
-  `hook`/`ward`, `subPath`, `stateChoices`, `ReturnWidgetKind.PROXY` removed;
-  `Window.windowFunction` is an enum.
 
 
 ## v1.0.0-rc.10 (2026-08-21)
