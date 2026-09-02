@@ -1,6 +1,36 @@
 # CHANGELOG
 
 
+## v1.0.0-rc.11 (2026-09-02)
+
+### Features
+
+- Sync rekuest_core (blok UtilCall for effects, validators and widgets) and fix reactive enum drift
+  ([`395e6e2`](https://github.com/arkitektio/fluss-server-next/commit/395e6e29cc64707256bf559e299323c328d2fa67))
+
+- rekuest_core mirrors rekuest: `call: UtilCall!` replaces `function: ValidatorFunction` on effects
+  and validators; purity and dependency-grammar checks; ActionArgument exactly-one binding; blok
+  manifest coherence validation; catalog vocabulary; arrow-function state paths and `hook`/`ward`
+  widgets replaced by static pointers + pure calls and catalog components; kind-aware widget input
+  validation; `WindowFunction` enum; duplicate classes removed; `DynamicValueInput.literal` added. -
+  `ReactiveImplementationChoices` gains `SELECT` and `JUST`, which the GraphQL enum already had but
+  the database could not store (migration 0002); a test pins the two enums together.
+
+BREAKING CHANGE: `ValidatorFunction` scalar removed; `Effect.function`/`Validator.function` are
+  `call: UtilCall!`; `hook`/`ward`, `subPath`, `stateChoices`, `ReturnWidgetKind.PROXY` removed;
+  `Window.windowFunction` is an enum.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019je4cqXZZqsfXcF5AySTtY
+
+### Breaking Changes
+
+- `validatorfunction` scalar removed; `Effect.function`/`Validator.function` are `call: UtilCall!`;
+  `hook`/`ward`, `subPath`, `stateChoices`, `ReturnWidgetKind.PROXY` removed;
+  `Window.windowFunction` is an enum.
+
+
 ## v1.0.0-rc.10 (2026-08-21)
 
 
