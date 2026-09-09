@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v1.0.0-rc.13 (2026-09-09)
+
+### Bug Fixes
+
+- Fluss stuff
+  ([`7b7d810`](https://github.com/arkitektio/fluss-server-next/commit/7b7d8106733f1abc99318f1f80c1e4c913c0fef0))
+
+
 ## v1.0.0-rc.12 (2026-09-02)
 
 
