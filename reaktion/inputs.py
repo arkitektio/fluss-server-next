@@ -23,14 +23,14 @@ class PositionInput:
 class GraphNodeInputModel(BaseModel):
     id: str
     kind: enums.GraphNodeKind
-    position: PositionInput
+    position: PositionInputModel
     parent_node: str | None = None
-    ins: list[list[rimodels.PortInputModel]] | None = None  # A set of streams
-    outs: list[list[rimodels.PortInputModel]] | None = None
-    constants: list[rimodels.PortInputModel] | None = None
-    voids: list[rimodels.PortInputModel]
-    constants_map: Dict[str, Any]
-    globals_map: Dict[str, Any]
+    ins: list[list[rimodels.ArgPortInputModel]] | None = None  # A set of streams
+    outs: list[list[rimodels.ReturnPortInputModel]] | None = None
+    constants: list[rimodels.ArgPortInputModel] | None = None
+    voids: list[rimodels.ArgPortInputModel] = Field(default_factory=list)
+    constants_map: Dict[str, Any] = Field(default_factory=dict)
+    globals_map: Dict[str, Any] = Field(default_factory=dict)
     description: str | None = None
     title: str | None = None
     retries: int | None = None
