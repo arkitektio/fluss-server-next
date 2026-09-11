@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v1.0.0-rc.14 (2026-09-11)
+
+### Bug Fixes
+
+- Inputs
+  ([`4677745`](https://github.com/arkitektio/fluss-server-next/commit/46777456e280a7d330072eadc76d667288024390))
+
+
 ## v1.0.0-rc.13 (2026-09-09)
 
 ### Bug Fixes
