@@ -1,12 +1,43 @@
 from strawberry.experimental import pydantic
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
 from rekuest_core.inputs import models as rimodels
 from rekuest_core.inputs import types as ritypes
 from rekuest_core import enums as renums
 from reaktion import scalars, enums
-from typing import Any, Dict, Optional
+from typing import Annotated, Any, Dict, Optional, cast
 from strawberry import LazyType
 import strawberry
+
+
+def _map_or_empty(value: Any) -> Any:
+    """Treat an omitted (``null``) map as an empty one.
+
+    ``ValueMapInput`` fields must default to *null* rather than ``{}`` on the wire:
+    ``ValueMap`` is a custom scalar, and graphql-js cannot turn an object default back
+    into an AST literal, so an ``= {}`` default makes both ``printSchema`` and
+    introspection raise ``Cannot convert value to AST: {}`` and breaks client codegen.
+    The stored graph still always carries a map -- the matching output fields on
+    ``GraphNode`` are non-null -- so normalise ``None`` back to ``{}`` here.
+    """
+    return {} if value is None else value
+
+
+#: A map-valued input field that is optional on the wire but always a dict in Python.
+ValueMapInput = Annotated[Dict[str, Any], BeforeValidator(_map_or_empty)]
+
+#: Default for a ``ValueMapInput``. It is ``None`` at runtime -- which is what makes
+#: strawberry emit ``= null`` rather than ``= {}`` in the SDL -- and ``validate_default``
+#: then runs ``_map_or_empty`` over it, so the model still lands a dict. Cast because the
+#: declared field type is the post-validation ``Dict``, not the on-the-wire ``None``.
+#:
+#: This has to live on the *pydantic* model: ``strawberry.experimental.pydantic`` derives
+#: every SDL default from the pydantic FieldInfo and ignores whatever default is written on
+#: the decorated strawberry class, so setting ``= None``/``= strawberry.UNSET`` over on
+#: ``GraphNodeInput`` has no effect. And it has to be ``None`` specifically: strawberry's
+#: ``get_default_factory_for_field`` treats a ``None`` default as "no default" and falls
+#: through to emitting null, while any ``default_factory`` (such as ``dict``) is emitted
+#: verbatim -- which is what produced the unrepresentable ``= {}``.
+OMITTED_MAP: ValueMapInput = cast(ValueMapInput, cast(object, None))
 
 
 class PositionInputModel(BaseModel):
@@ -29,8 +60,8 @@ class GraphNodeInputModel(BaseModel):
     outs: list[list[rimodels.ReturnPortInputModel]] | None = None
     constants: list[rimodels.ArgPortInputModel] | None = None
     voids: list[rimodels.ArgPortInputModel] = Field(default_factory=list)
-    constants_map: Dict[str, Any] = Field(default_factory=dict)
-    globals_map: Dict[str, Any] = Field(default_factory=dict)
+    constants_map: ValueMapInput = Field(default=OMITTED_MAP, validate_default=True)
+    globals_map: ValueMapInput = Field(default=OMITTED_MAP, validate_default=True)
     description: str | None = None
     title: str | None = None
     retries: int | None = None

@@ -87,3 +87,27 @@ async def test_update_workspace_round_trips_a_valid_graph(aexecute, make_workspa
     read = await aexecute("query($id: ID!) { flow(id: $id) { graph { nodes { id kind outs { key kind children { key identifier } } } } } }", {"id": str(flow.id)})
     assert not read.errors, read.errors
     assert read.data["flow"]["graph"]["nodes"][0]["outs"][0][0]["children"][0]["identifier"] == "@mikro/image"
+
+
+async def test_update_workspace_defaults_omitted_value_maps(aexecute, make_workspace):
+    """``constantsMap``/``globalsMap`` are optional on the wire but always stored as maps.
+
+    They carry no SDL default (an ``= {}`` default on the ``ValueMap`` custom scalar is
+    unrepresentable as an AST literal and breaks client codegen), so omitting them sends
+    ``null`` -- which must still round-trip as ``{}`` because the matching ``GraphNode``
+    output fields are non-null.
+    """
+    ws = await make_workspace(title="Defaulted maps")
+    bare = {"id": "1", "kind": "ARGS", "position": {"x": 0, "y": 0}, "ins": [[]], "outs": [[]], "constants": [], "voids": []}
+    graph = {"nodes": [bare], "edges": [], "globals": []}
+    res = await aexecute(UPDATE_WORKSPACE, {"input": {"workspace": str(ws.id), "graph": graph, "title": "Defaulted"}})
+    assert not res.errors, res.errors
+
+    flow = await Flow.objects.aget(workspace_id=ws.id, title="Defaulted")
+    assert flow.graph["nodes"][0]["constants_map"] == {}
+    assert flow.graph["nodes"][0]["globals_map"] == {}
+
+    read = await aexecute("query($id: ID!) { flow(id: $id) { graph { nodes { id constantsMap globalsMap } } } }", {"id": str(flow.id)})
+    assert not read.errors, read.errors
+    assert read.data["flow"]["graph"]["nodes"][0]["constantsMap"] == {}
+    assert read.data["flow"]["graph"]["nodes"][0]["globalsMap"] == {}
