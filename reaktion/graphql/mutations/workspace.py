@@ -21,7 +21,9 @@ def update_workspace(info: Info, input: UpdateWorkspaceInput) -> types.Workspace
     # (raises DoesNotExist for a cross-org / unknown workspace).
     workspace = get_for_org(models.Workspace, info, id=input.workspace)
 
-    graph = strawberry.asdict(input.graph)
+    # Validate through the pydantic graph model (port kinds, widgets, dependencies) and store
+    # the normalised dump; the hash is over that dump.
+    graph = input.graph.to_pydantic().model_dump(mode="json")
 
     flow, _ = models.Flow.objects.get_or_create(
         workspace=workspace,
@@ -82,11 +84,8 @@ def create_workspace(info: Info, input: CreateWorkspaceInput) -> types.Workspace
         },
     ]
 
-    graph = {
-        "nodes": nodes,
-        "edges": [],
-        "globals": [],
-    }
+    # The default graph goes through the same validation and normalisation as a posted one.
+    graph = inputs.GraphInputModel.model_validate({"nodes": nodes, "edges": [], "globals": []}).model_dump(mode="json")
 
     models.Flow.objects.create(workspace=workspace, graph=graph, hash=hash_graph(graph), title=title, description=input.description, creator=info.context.request.user, organization=info.context.request.organization)
 

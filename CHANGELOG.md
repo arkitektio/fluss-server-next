@@ -1,7 +1,124 @@
+<!-- Frozen. Releases are tag-only since the move to tag-only semantic-release,
+so this file is no longer generated; entries below stop at the last release that
+predates the switch. Current release notes live on the GitHub Releases page. -->
+
 # CHANGELOG
 
 
-## v1.0.0 (2026-06-25)
+## v1.0.0-rc.14 (2026-09-11)
+
+### Bug Fixes
+
+- Inputs
+  ([`4677745`](https://github.com/arkitektio/fluss-server-next/commit/46777456e280a7d330072eadc76d667288024390))
+
+
+## v1.0.0-rc.13 (2026-09-09)
+
+### Bug Fixes
+
+- Fluss stuff
+  ([`7b7d810`](https://github.com/arkitektio/fluss-server-next/commit/7b7d8106733f1abc99318f1f80c1e4c913c0fef0))
+
+
+## v1.0.0-rc.12 (2026-09-02)
+
+
+## v1.0.0-rc.11 (2026-09-02)
+
+### Features
+
+- Rkuest next update
+  ([`39149cd`](https://github.com/arkitektio/fluss-server-next/commit/39149cdee4f312f1e01abea564ee1951d7e209f0))
+
+- Sync rekuest_core (blok UtilCall for effects, validators and widgets) and fix reactive enum drift
+  ([`395e6e2`](https://github.com/arkitektio/fluss-server-next/commit/395e6e29cc64707256bf559e299323c328d2fa67))
+
+- rekuest_core mirrors rekuest: `call: UtilCall!` replaces `function: ValidatorFunction` on effects
+  and validators; purity and dependency-grammar checks; ActionArgument exactly-one binding; blok
+  manifest coherence validation; catalog vocabulary; arrow-function state paths and `hook`/`ward`
+  widgets replaced by static pointers + pure calls and catalog components; kind-aware widget input
+  validation; `WindowFunction` enum; duplicate classes removed; `DynamicValueInput.literal` added. -
+  `ReactiveImplementationChoices` gains `SELECT` and `JUST`, which the GraphQL enum already had but
+  the database could not store (migration 0002); a test pins the two enums together.
+
+BREAKING CHANGE: `ValidatorFunction` scalar removed; `Effect.function`/`Validator.function` are
+  `call: UtilCall!`; `hook`/`ward`, `subPath`, `stateChoices`, `ReturnWidgetKind.PROXY` removed;
+  `Window.windowFunction` is an enum.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019je4cqXZZqsfXcF5AySTtY
+
+
+## v1.0.0-rc.10 (2026-08-21)
+
+
+## v1.0.0-rc.9 (2026-08-20)
+
+### Bug Fixes
+
+- Authentikate
+  ([`e6f1c93`](https://github.com/arkitektio/fluss-server-next/commit/e6f1c93fce23b55d65e2b46d8be45345ac20fede))
+
+- Authentikate 4
+  ([`32b9483`](https://github.com/arkitektio/fluss-server-next/commit/32b9483ee81aa2dfe3e4ff6a5f0e9564fbc58aad))
+
+
+## v1.0.0-rc.8 (2026-07-02)
+
+### Bug Fixes
+
+- To new api
+  ([`038a267`](https://github.com/arkitektio/fluss-server-next/commit/038a267840a5c44f3b6d9b5d926c411ca02a8d8c))
+
+
+## v1.0.0-rc.7 (2026-06-30)
+
+### Bug Fixes
+
+- New models
+  ([`6586cc9`](https://github.com/arkitektio/fluss-server-next/commit/6586cc96f9712f009182002bb3d0f1d075c87917))
+
+
+## v1.0.0-rc.6 (2026-06-29)
+
+### Bug Fixes
+
+- Uv lock
+  ([`49035b4`](https://github.com/arkitektio/fluss-server-next/commit/49035b43601020473f41c8c55eafa478be0cebcd))
+
+
+## v1.0.0-rc.5 (2026-06-29)
+
+### Bug Fixes
+
+- Authentikate update
+  ([`d4f03df`](https://github.com/arkitektio/fluss-server-next/commit/d4f03df6b53563bbd876757ce6ed1f0fc67ffc9e))
+
+
+## v1.0.0-rc.4 (2026-06-26)
+
+### Features
+
+- Removal of stale migrations
+  ([`b411c1e`](https://github.com/arkitektio/fluss-server-next/commit/b411c1e9891fec219f386e2f06dfc97f9d942198))
+
+
+## v1.0.0-rc.3 (2026-06-26)
+
+
+## v1.0.0-rc.2 (2026-06-26)
+
+### Bug Fixes
+
+- With CONFIG.md
+  ([`266ca87`](https://github.com/arkitektio/fluss-server-next/commit/266ca87d4180551a1d8aca4869c9483f2cd8c770))
+
+### Features
+
+- With white noise and optimized Dockerfile
+  ([`21bad34`](https://github.com/arkitektio/fluss-server-next/commit/21bad34adbd0c7402b69cdbc41fb33c9600c7944))
 
 
 ## v1.0.0-rc.1 (2026-06-25)

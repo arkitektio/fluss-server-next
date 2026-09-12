@@ -48,14 +48,14 @@ class GraphNodeModel(BaseModel):
     id: str = Field(description="The id of the node, unique within the graph.")
     position: PositionModel = Field(description="The position of the node on the editor canvas.")
     parent_node: str | None = Field(default=None, description="The id of the parent node, if this node is nested inside another.")
-    ins: list[list[rmodels.PortModel]] = Field(description="The input port streams the node consumes (a list of streams, each a list of ports).")
-    outs: list[list[rmodels.PortModel]] = Field(description="The output port streams the node produces (a list of streams, each a list of ports).")
-    constants: list[rmodels.PortModel] = Field(description="The constant ports configured on the node.")
-    voids: list[rmodels.PortModel] = Field(description="The void ports of the node (neither streamed in nor out).")
-    constants_map: Dict[str, Any] = Field(description="A map of constant port keys to their configured values.")
-    globals_map: Dict[str, Any] = Field(description="A map of global argument keys to the node port keys they feed.")
-    description: str = Field(description="A human-readable description of what the node does.")
-    title: str = Field(description="A human-readable title for the node.")
+    ins: list[list[rmodels.ArgPortModel]] = Field(default_factory=list, description="The input port streams the node consumes (a list of streams, each a list of ports).")
+    outs: list[list[rmodels.ReturnPortModel]] = Field(default_factory=list, description="The output port streams the node produces (a list of streams, each a list of ports).")
+    constants: list[rmodels.ArgPortModel] = Field(default_factory=list, description="The constant ports configured on the node.")
+    voids: list[rmodels.ArgPortModel] = Field(default_factory=list, description="The void ports of the node (neither streamed in nor out).")
+    constants_map: Dict[str, Any] = Field(default_factory=dict, description="A map of constant port keys to their configured values.")
+    globals_map: Dict[str, Any] = Field(default_factory=dict, description="A map of global argument keys to the node port keys they feed.")
+    description: str | None = Field(default=None, description="A human-readable description of what the node does.")
+    title: str | None = Field(default=None, description="A human-readable title for the node.")
 
 
 @pydantic.interface(
@@ -77,8 +77,8 @@ class GraphNode:
     voids: list[rtypes.ArgPort]  # Items that are voids
     constants_map: scalars.ValueMap
     globals_map: scalars.ValueMap
-    description: str = "No description"
-    title: str
+    description: str | None = None
+    title: str | None = None
 
 
 class RetriableNodeModel(BaseModel):

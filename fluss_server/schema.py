@@ -10,7 +10,8 @@ from authentikate.strawberry.extension import AuthentikateExtension
 from strawberry.schema.config import StrawberryConfig
 from kante.types import Info
 from typing import List
-from rekuest_core.constants import interface_types
+from rekuest_core.constants import interface_types, input_union_types
+from kante.unions import unionElementOf
 from rekuest_core.scalars import scalar_map as rekuest_scalar_map
 from reaktion.scalars import scalar_map as reaktion_scalar_map
 from reaktion.scoping import get_for_org
@@ -114,5 +115,7 @@ schema = kante.Schema(
         types.ReactiveNode,
         types.AgentSubFlowNode,
     ]
-    + interface_types,
+    + interface_types
+    + input_union_types,
+    schema_directives=[unionElementOf],
 )
